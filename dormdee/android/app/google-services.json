@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "529712825170",
+    "project_id": "dormdee-9f6ed",
+    "storage_bucket": "dormdee-9f6ed.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:529712825170:android:61197ddef721f52c54f08b",
+        "android_client_info": {
+          "package_name": "com.example.dormdee"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCH_gH2cm6ElTvp-ANM387tGQaITlQznvU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

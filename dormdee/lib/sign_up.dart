@@ -12,6 +12,7 @@ class SignUpPageState extends State<SignUpPage> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      color: Colors.white,
       home: Scaffold(
           appBar: AppBar(
             leading: IconButton(
