@@ -193,13 +193,13 @@ class SignUpPageState extends State<SignUpPage> {
                           borderRadius: BorderRadius.circular(20),
                         ),
                         padding: const EdgeInsets.only(
-                            left: 150, right: 150, top: 12, bottom: 12),
+                            left: 120, right: 120, top: 15, bottom: 15),
                       ),
                       onPressed: signUpMethod,
                       child: const Text(
                         "Create Account",
                         style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.w400),
+                            fontSize: 15, fontWeight: FontWeight.w400),
                       ))
                 ]),
           )),

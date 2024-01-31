@@ -12,7 +12,20 @@
           "package_name": "com.example.dormdee"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "529712825170-got5a49crnqh337jplur8uts4ieu0q03.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.dormdee",
+            "certificate_hash": "93a439cd0e40c15d7cdd88b928953c7eaabadbbe"
+          }
+        },
+        {
+          "client_id": "529712825170-98prn81gq1qq105hipev1nke93s47b9o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCH_gH2cm6ElTvp-ANM387tGQaITlQznvU"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "529712825170-98prn81gq1qq105hipev1nke93s47b9o.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

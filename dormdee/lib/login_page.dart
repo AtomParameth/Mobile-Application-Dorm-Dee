@@ -1,12 +1,5 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'sign_up.dart';
-
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  Firebase.initializeApp();
-  runApp(const LoginAppPage());
-}
 
 class LoginAppPage extends StatefulWidget {
   const LoginAppPage({Key? key}) : super(key: key);
@@ -138,8 +131,7 @@ class LoginAppPageState extends State<LoginAppPage> {
                     Builder(
                       builder: (context) => TextButton(
                         onPressed: () {
-                          Navigator.push(
-                            context,
+                          Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) => const SignUpPage(),
                             ),
