@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'firebase_service/firebase_auth_service.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
@@ -8,6 +10,24 @@ class SignUpPage extends StatefulWidget {
 }
 
 class SignUpPageState extends State<SignUpPage> {
+  final FirebaseAuthService _firebaseAuthService = FirebaseAuthService();
+
+  TextEditingController emailController = TextEditingController();
+  TextEditingController phoneNumberController = TextEditingController();
+  TextEditingController userNameController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    phoneNumberController.dispose();
+    userNameController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -49,6 +69,7 @@ class SignUpPageState extends State<SignUpPage> {
                       elevation: 5,
                       borderRadius: BorderRadius.circular(20),
                       child: TextFormField(
+                        controller: emailController,
                         decoration: const InputDecoration(
                           labelText: "Email...",
                           labelStyle: TextStyle(
@@ -72,6 +93,7 @@ class SignUpPageState extends State<SignUpPage> {
                       elevation: 5,
                       borderRadius: BorderRadius.circular(20),
                       child: TextFormField(
+                        controller: phoneNumberController,
                         decoration: const InputDecoration(
                           labelText: "Phone number...",
                           labelStyle: TextStyle(
@@ -95,6 +117,7 @@ class SignUpPageState extends State<SignUpPage> {
                       elevation: 5,
                       borderRadius: BorderRadius.circular(20),
                       child: TextFormField(
+                        controller: userNameController,
                         decoration: const InputDecoration(
                           labelText: "Username...",
                           labelStyle: TextStyle(
@@ -118,6 +141,7 @@ class SignUpPageState extends State<SignUpPage> {
                       elevation: 5,
                       borderRadius: BorderRadius.circular(20),
                       child: TextFormField(
+                        controller: passwordController,
                         decoration: const InputDecoration(
                           labelText: "Password...",
                           labelStyle: TextStyle(
@@ -141,6 +165,7 @@ class SignUpPageState extends State<SignUpPage> {
                       elevation: 5,
                       borderRadius: BorderRadius.circular(20),
                       child: TextFormField(
+                        controller: confirmPasswordController,
                         decoration: const InputDecoration(
                           labelText: "Confirm password...",
                           labelStyle: TextStyle(
@@ -170,14 +195,28 @@ class SignUpPageState extends State<SignUpPage> {
                         padding: const EdgeInsets.only(
                             left: 150, right: 150, top: 12, bottom: 12),
                       ),
-                      onPressed: () {},
+                      onPressed: signUpMethod,
                       child: const Text(
-                        "Send",
+                        "Create Account",
                         style: TextStyle(
                             fontSize: 20, fontWeight: FontWeight.w400),
                       ))
                 ]),
           )),
     );
+  }
+
+  void signUpMethod() async {
+    String email = emailController.text;
+    String password = passwordController.text;
+
+    User? user =
+        await _firebaseAuthService.signUpWithEmailAndPassword(email, password);
+
+    if (user != null) {
+      print("Sign up successful");
+    } else {
+      print("Sign up failed");
+    }
   }
 }
