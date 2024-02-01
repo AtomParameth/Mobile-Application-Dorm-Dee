@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:dormdee/firebase_service/firebase_auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -16,12 +14,18 @@ class LoginAppPageState extends State<LoginAppPage> {
   final FirebaseAuthService _firebaseAuthService = FirebaseAuthService();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-
+  bool obscureTextToggler = true;
   @override
   void dispose() {
     emailController.dispose();
     passwordController.dispose();
     super.dispose();
+  }
+
+  void enableObscureText() {
+    setState(() {
+      obscureTextToggler = !obscureTextToggler;
+    });
   }
 
   @override
@@ -80,21 +84,27 @@ class LoginAppPageState extends State<LoginAppPage> {
                     elevation: 5,
                     borderRadius: BorderRadius.circular(20),
                     child: TextFormField(
-                      obscureText: true,
+                      obscureText: obscureTextToggler,
                       controller: passwordController,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         labelText: "Password...",
-                        labelStyle: TextStyle(
+                        labelStyle: const TextStyle(
                           color: Colors.black,
                           fontSize: 15,
                         ),
-                        contentPadding: EdgeInsets.only(left: 20),
-                        border: OutlineInputBorder(
+                        contentPadding: const EdgeInsets.only(left: 20),
+                        border: const OutlineInputBorder(
                           borderRadius: BorderRadius.all(
                             Radius.circular(20),
                           ),
                         ),
-                        suffixIcon: Icon(Icons.visibility),
+                        suffixIcon: IconButton(
+                            onPressed: () {
+                              enableObscureText();
+                            },
+                            icon: obscureTextToggler
+                                ? const Icon(Icons.visibility)
+                                : const Icon(Icons.visibility_off)),
                       ),
                     ),
                   ),
