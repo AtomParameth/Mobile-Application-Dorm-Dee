@@ -132,8 +132,8 @@ class LoginAppPageState extends State<LoginAppPage> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                _buildButton("Login", const Color.fromARGB(255, 68, 68, 68),
-                    const Color.fromARGB(255, 255, 255, 255)),
+                _buildButton("Login", Colors.white,
+                    const Color.fromARGB(255, 40, 40, 40)),
                 const Padding(
                   padding:
                       EdgeInsets.only(left: 35, right: 35, top: 10, bottom: 10),
@@ -157,8 +157,8 @@ class LoginAppPageState extends State<LoginAppPage> {
                 _buildButtonWithImage(
                     "Login with Google",
                     "images/google_icon.png",
-                    const Color.fromARGB(255, 68, 68, 68),
-                    Colors.white),
+                    Colors.white,
+                    const Color.fromARGB(255, 40, 40, 40)),
                 ButtonBar(
                   alignment: MainAxisAlignment.center,
                   children: [
