@@ -10,6 +10,11 @@ class ForgetPWPage extends StatefulWidget {
 
 class _ForgetPWPageState extends State<ForgetPWPage> {
   final TextEditingController emailController = TextEditingController();
+  @override
+  void dispose() {
+    emailController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,9 +51,10 @@ class _ForgetPWPageState extends State<ForgetPWPage> {
     );
   }
 
-  Future<void> resetPassword() async {
+  Future resetPassword() async {
     try {
-      await FirebaseAuth.instance.sendPasswordResetEmail(email: "email");
+      await FirebaseAuth.instance
+          .sendPasswordResetEmail(email: emailController.text.trim());
     } on FirebaseAuthException catch (e) {
       print(e);
     }
