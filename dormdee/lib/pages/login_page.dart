@@ -1,4 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:dormdee/firebase_service/firebase_auth_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'sign_up.dart';
 
 class LoginAppPage extends StatefulWidget {
@@ -9,6 +13,17 @@ class LoginAppPage extends StatefulWidget {
 }
 
 class LoginAppPageState extends State<LoginAppPage> {
+  final FirebaseAuthService _firebaseAuthService = FirebaseAuthService();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -39,6 +54,7 @@ class LoginAppPageState extends State<LoginAppPage> {
                     elevation: 5,
                     borderRadius: BorderRadius.circular(20),
                     child: TextFormField(
+                      controller: emailController,
                       decoration: const InputDecoration(
                         labelText: "Username...",
                         labelStyle: TextStyle(
@@ -64,6 +80,8 @@ class LoginAppPageState extends State<LoginAppPage> {
                     elevation: 5,
                     borderRadius: BorderRadius.circular(20),
                     child: TextFormField(
+                      obscureText: true,
+                      controller: passwordController,
                       decoration: const InputDecoration(
                         labelText: "Password...",
                         labelStyle: TextStyle(
@@ -152,64 +170,76 @@ class LoginAppPageState extends State<LoginAppPage> {
       ),
     );
   }
-}
 
-Widget _buildGreyText(String text) {
-  return Text(
-    text,
-    style: const TextStyle(
-      color: Color.fromARGB(255, 68, 68, 68),
-    ),
-  );
-}
+  void signInMethod() async {
+    String email = emailController.text.trim();
+    String password = passwordController.text.trim();
+    User? user =
+        await _firebaseAuthService.signInWithEmailAndPassword(email, password);
+    if (user != null) {
+      print("Sign in successful");
+    } else {
+      print("Sign in failed");
+    }
+  }
 
-Widget _buildButton(String text, Color textColor, Color backgroundColor) {
-  return ElevatedButton(
-    onPressed: () {},
-    style: ElevatedButton.styleFrom(
-      elevation: 5,
-      backgroundColor: backgroundColor,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
-      minimumSize: const Size(330, 50),
-    ),
-    child: Text(
+  Widget _buildGreyText(String text) {
+    return Text(
       text,
-      style: TextStyle(color: textColor),
-    ),
-  );
-}
+      style: const TextStyle(
+        color: Color.fromARGB(255, 68, 68, 68),
+      ),
+    );
+  }
 
-Widget _buildButtonWithImage(
-    String text, String imgAsset, Color textColor, Color backgroundColor) {
-  return Padding(
-      padding: const EdgeInsets.only(left: 30, right: 30),
-      child: ElevatedButton(
-        onPressed: () {},
-        style: ElevatedButton.styleFrom(
-          elevation: 5,
-          backgroundColor: backgroundColor,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
+  Widget _buildButton(String text, Color textColor, Color backgroundColor) {
+    return ElevatedButton(
+      onPressed: signInMethod,
+      style: ElevatedButton.styleFrom(
+        elevation: 5,
+        backgroundColor: backgroundColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        minimumSize: const Size(330, 50),
+      ),
+      child: Text(
+        text,
+        style: TextStyle(color: textColor),
+      ),
+    );
+  }
+
+  Widget _buildButtonWithImage(
+      String text, String imgAsset, Color textColor, Color backgroundColor) {
+    return Padding(
+        padding: const EdgeInsets.only(left: 30, right: 30),
+        child: ElevatedButton(
+          onPressed: () {},
+          style: ElevatedButton.styleFrom(
+            elevation: 5,
+            backgroundColor: backgroundColor,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            minimumSize: const Size(330, 50),
           ),
-          minimumSize: const Size(330, 50),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              "images/google_icon.png",
-              scale: 1.5,
-            ),
-            const SizedBox(
-              width: 10,
-            ),
-            Text(
-              text,
-              style: TextStyle(color: textColor),
-            ),
-          ],
-        ),
-      ));
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                "images/google_icon.png",
+                scale: 1.5,
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              Text(
+                text,
+                style: TextStyle(color: textColor),
+              ),
+            ],
+          ),
+        ));
+  }
 }
