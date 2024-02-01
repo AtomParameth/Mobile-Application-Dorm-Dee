@@ -98,7 +98,7 @@ class LoginAppPageState extends State<LoginAppPage> {
                 ),
                 const SizedBox(height: 10),
                 _buildButton("Login", const Color.fromARGB(255, 68, 68, 68),
-                    Colors.white),
+                    const Color.fromARGB(255, 255, 255, 255)),
                 const Padding(
                   padding:
                       EdgeInsets.only(left: 35, right: 35, top: 10, bottom: 10),

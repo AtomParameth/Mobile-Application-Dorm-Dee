@@ -199,7 +199,9 @@ class SignUpPageState extends State<SignUpPage> {
                       child: const Text(
                         "Create Account",
                         style: TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.w400),
+                            fontSize: 15,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.white),
                       ))
                 ]),
           )),
