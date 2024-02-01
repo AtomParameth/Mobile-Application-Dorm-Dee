@@ -10,6 +10,7 @@ class ForgetPWPage extends StatefulWidget {
 
 class _ForgetPWPageState extends State<ForgetPWPage> {
   final TextEditingController emailController = TextEditingController();
+  bool contextUnderTF = true;
   @override
   void dispose() {
     emailController.dispose();
@@ -20,33 +21,72 @@ class _ForgetPWPageState extends State<ForgetPWPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: Center(
-        child: Card(
-            child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                "Please enter your email and we will send you a link to reset your password via your email",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              TextFormField(
-                controller: emailController,
-                decoration: const InputDecoration(
-                  labelText: "Email",
-                  hintText: "Enter your email",
-                  border: OutlineInputBorder(),
+      body: SingleChildScrollView(
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(top: 60, bottom: 140),
+                  child: Image.asset("images/dormdeelogo.png"),
                 ),
-              ),
-              ElevatedButton(
-                  onPressed: () {
-                    resetPassword();
-                  },
-                  child: const Text("Send Yai"))
-            ],
+                Container(
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  child: Material(
+                    elevation: 5,
+                    borderRadius: BorderRadius.circular(20),
+                    child: TextFormField(
+                      controller: emailController,
+                      decoration: const InputDecoration(
+                        contentPadding: EdgeInsets.only(left: 10),
+                        labelText: "Enter your email...",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.only(left: 10, right: 20, top: 20),
+                  child: contextUnderTF
+                      ? const Text(
+                          "We’ll send the password reset info to your email address.",
+                          style: TextStyle(fontSize: 10),
+                        )
+                      : const Text("We have sent it please check your email.",
+                          style: TextStyle(
+                              fontSize: 10,
+                              color: Color.fromARGB(255, 31, 169, 37))),
+                ),
+                const SizedBox(
+                  height: 80,
+                ),
+                Container(
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  child: ElevatedButton(
+                      onPressed: () {
+                        resetPassword();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            const Color.fromARGB(255, 85, 122, 255),
+                        minimumSize: const Size(double.infinity, 50),
+                      ),
+                      child: const Text(
+                        "Send",
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                        ),
+                      )),
+                )
+              ],
+            ),
           ),
-        )),
+        ),
       ),
     );
   }
@@ -55,6 +95,9 @@ class _ForgetPWPageState extends State<ForgetPWPage> {
     try {
       await FirebaseAuth.instance
           .sendPasswordResetEmail(email: emailController.text.trim());
+      setState(() {
+        contextUnderTF = !contextUnderTF;
+      });
     } on FirebaseAuthException catch (e) {
       print(e);
     }
