@@ -1,3 +1,4 @@
+import 'package:dormdee/pages/forgot_password.dart';
 import 'package:flutter/material.dart';
 import 'package:dormdee/firebase_service/firebase_auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -118,7 +119,13 @@ class LoginAppPageState extends State<LoginAppPage> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => ForgetPWPage(),
+                            ),
+                          );
+                        },
                         child: _buildGreyText("Forgot Password?"),
                       ),
                     ],
