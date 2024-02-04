@@ -1,6 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:dormdee/controller/auth_controller.dart';
+//import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '../firebase_service/firebase_auth_service.dart';
+//import 'package:get/get.dart';
+//import '../firebase_service/firebase_auth_service.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
@@ -10,7 +12,7 @@ class SignUpPage extends StatefulWidget {
 }
 
 class SignUpPageState extends State<SignUpPage> {
-  final FirebaseAuthService _firebaseAuthService = FirebaseAuthService();
+  //final FirebaseAuthService _firebaseAuthService = FirebaseAuthService();
 
   TextEditingController emailController = TextEditingController();
   TextEditingController phoneNumberController = TextEditingController();
@@ -69,7 +71,7 @@ class SignUpPageState extends State<SignUpPage> {
                       elevation: 5,
                       borderRadius: BorderRadius.circular(20),
                       child: TextFormField(
-                        controller: emailController,
+                        controller: AuthController.instance.emailController,
                         decoration: const InputDecoration(
                           labelText: "Email...",
                           labelStyle: TextStyle(
@@ -93,7 +95,8 @@ class SignUpPageState extends State<SignUpPage> {
                       elevation: 5,
                       borderRadius: BorderRadius.circular(20),
                       child: TextFormField(
-                        controller: phoneNumberController,
+                        controller:
+                            AuthController.instance.phoneNumberController,
                         decoration: const InputDecoration(
                           labelText: "Phone number...",
                           labelStyle: TextStyle(
@@ -117,7 +120,7 @@ class SignUpPageState extends State<SignUpPage> {
                       elevation: 5,
                       borderRadius: BorderRadius.circular(20),
                       child: TextFormField(
-                        controller: userNameController,
+                        controller: AuthController.instance.userNameController,
                         decoration: const InputDecoration(
                           labelText: "Username...",
                           labelStyle: TextStyle(
@@ -141,7 +144,7 @@ class SignUpPageState extends State<SignUpPage> {
                       elevation: 5,
                       borderRadius: BorderRadius.circular(20),
                       child: TextFormField(
-                        controller: passwordController,
+                        controller: AuthController.instance.passwordController,
                         decoration: const InputDecoration(
                           labelText: "Password...",
                           labelStyle: TextStyle(
@@ -165,7 +168,8 @@ class SignUpPageState extends State<SignUpPage> {
                       elevation: 5,
                       borderRadius: BorderRadius.circular(20),
                       child: TextFormField(
-                        controller: confirmPasswordController,
+                        controller:
+                            AuthController.instance.confirmPasswordController,
                         decoration: const InputDecoration(
                           labelText: "Confirm password...",
                           labelStyle: TextStyle(
@@ -195,7 +199,7 @@ class SignUpPageState extends State<SignUpPage> {
                         padding: const EdgeInsets.only(
                             left: 120, right: 120, top: 15, bottom: 15),
                       ),
-                      onPressed: signUpMethod,
+                      onPressed: AuthController.instance.signUp,
                       child: const Text(
                         "Create Account",
                         style: TextStyle(
@@ -208,17 +212,17 @@ class SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  void signUpMethod() async {
-    String email = emailController.text;
-    String password = passwordController.text;
+  // void signUpMethod() async {
+  //   String email = emailController.text;
+  //   String password = passwordController.text;
 
-    User? user =
-        await _firebaseAuthService.signUpWithEmailAndPassword(email, password);
+  //   User? user =
+  //       await _firebaseAuthService.signUpWithEmailAndPassword(email, password);
 
-    if (user != null) {
-      print("Sign up successful");
-    } else {
-      print("Sign up failed");
-    }
-  }
+  //   if (user != null) {
+  //     print("Sign up successful");
+  //   } else {
+  //     print("Sign up failed");
+  //   }
+  // }
 }

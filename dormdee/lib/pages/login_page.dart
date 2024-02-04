@@ -1,7 +1,8 @@
+import 'package:dormdee/controller/auth_controller.dart';
 import 'package:dormdee/pages/forgot_password.dart';
 import 'package:flutter/material.dart';
-import 'package:dormdee/firebase_service/firebase_auth_service.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+//import 'package:dormdee/firebase_service/firebase_auth_service.dart';
+//import 'package:firebase_auth/firebase_auth.dart';
 import 'sign_up.dart';
 
 class LoginAppPage extends StatefulWidget {
@@ -12,7 +13,7 @@ class LoginAppPage extends StatefulWidget {
 }
 
 class LoginAppPageState extends State<LoginAppPage> {
-  final FirebaseAuthService _firebaseAuthService = FirebaseAuthService();
+  //final FirebaseAuthService _firebaseAuthService = FirebaseAuthService();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   bool obscureTextToggler = true;
@@ -59,7 +60,7 @@ class LoginAppPageState extends State<LoginAppPage> {
                     elevation: 5,
                     borderRadius: BorderRadius.circular(20),
                     child: TextFormField(
-                      controller: emailController,
+                      controller: AuthController.instance.emailController,
                       decoration: const InputDecoration(
                         labelText: "Username...",
                         labelStyle: TextStyle(
@@ -86,7 +87,7 @@ class LoginAppPageState extends State<LoginAppPage> {
                     borderRadius: BorderRadius.circular(20),
                     child: TextFormField(
                       obscureText: obscureTextToggler,
-                      controller: passwordController,
+                      controller: AuthController.instance.passwordController,
                       decoration: InputDecoration(
                         labelText: "Password...",
                         labelStyle: const TextStyle(
@@ -122,7 +123,7 @@ class LoginAppPageState extends State<LoginAppPage> {
                         onPressed: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (context) => ForgetPWPage(),
+                              builder: (context) => const ForgetPWPage(),
                             ),
                           );
                         },
@@ -188,17 +189,17 @@ class LoginAppPageState extends State<LoginAppPage> {
     );
   }
 
-  void signInMethod() async {
-    String email = emailController.text.trim();
-    String password = passwordController.text.trim();
-    User? user =
-        await _firebaseAuthService.signInWithEmailAndPassword(email, password);
-    if (user != null) {
-      print("Sign in successful");
-    } else {
-      print("Sign in failed");
-    }
-  }
+  // void signInMethod() async {
+  //   String email = emailController.text.trim();
+  //   String password = passwordController.text.trim();
+  //   User? user =
+  //       await _firebaseAuthService.signInWithEmailAndPassword(email, password);
+  //   if (user != null) {
+  //     print("Sign in successful");
+  //   } else {
+  //     print("Sign in failed");
+  //   }
+  // }
 
   Widget _buildGreyText(String text) {
     return Text(
@@ -211,7 +212,7 @@ class LoginAppPageState extends State<LoginAppPage> {
 
   Widget _buildButton(String text, Color textColor, Color backgroundColor) {
     return ElevatedButton(
-      onPressed: signInMethod,
+      onPressed: AuthController.instance.signIn,
       style: ElevatedButton.styleFrom(
         elevation: 5,
         backgroundColor: backgroundColor,
