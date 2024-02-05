@@ -33,8 +33,7 @@ class AuthController extends GetxController {
         clearTextField();
         Get.back();
       } else {
-        Get.snackbar("Error",
-            "Password does not match ${passwordController.text} ${confirmPasswordController.text}",
+        Get.snackbar("Error", "Password does not match!",
             snackPosition: SnackPosition.BOTTOM);
       }
     } on FirebaseAuthException catch (e) {

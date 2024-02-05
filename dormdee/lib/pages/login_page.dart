@@ -145,6 +145,7 @@ class LoginAppPageState extends State<LoginAppPage> {
                         thickness: 1,
                         color: Colors.grey,
                       )),
+                      SizedBox(width: 10),
                       Text("or"),
                       SizedBox(width: 10),
                       Expanded(
