@@ -23,7 +23,7 @@ class _HomePageState extends State<HomePage> {
       'Index 0: Home',
     ),
     Text(
-      'Index 1: Notifications',
+      'Index 1: Favorites Page',
     ),
     ProfilePage()
   ];
@@ -51,6 +51,7 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Colors.white,
       ),
       floatingActionButton: FloatingActionButton(
+          elevation: double.infinity,
           backgroundColor: Colors.black,
           onPressed: () {
             Navigator.of(context).push(
