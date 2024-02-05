@@ -41,6 +41,8 @@ class AuthController extends GetxController {
       Get.back();
       Get.snackbar("Error", e.message.toString(),
           snackPosition: SnackPosition.BOTTOM);
+    } finally {
+      clearTextField();
     }
   }
 
@@ -56,6 +58,8 @@ class AuthController extends GetxController {
       Get.back();
       Get.snackbar("Error", e.message.toString(),
           snackPosition: SnackPosition.BOTTOM);
+    } finally {
+      clearTextField();
     }
   }
 

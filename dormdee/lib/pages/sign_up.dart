@@ -95,6 +95,7 @@ class SignUpPageState extends State<SignUpPage> {
                       elevation: 5,
                       borderRadius: BorderRadius.circular(20),
                       child: TextFormField(
+                        keyboardType: TextInputType.number,
                         controller:
                             AuthController.instance.phoneNumberController,
                         decoration: const InputDecoration(
@@ -144,6 +145,7 @@ class SignUpPageState extends State<SignUpPage> {
                       elevation: 5,
                       borderRadius: BorderRadius.circular(20),
                       child: TextFormField(
+                        obscureText: true,
                         controller: AuthController.instance.passwordController,
                         decoration: const InputDecoration(
                           labelText: "Password...",
@@ -168,6 +170,7 @@ class SignUpPageState extends State<SignUpPage> {
                       elevation: 5,
                       borderRadius: BorderRadius.circular(20),
                       child: TextFormField(
+                        obscureText: true,
                         controller:
                             AuthController.instance.confirmPasswordController,
                         decoration: const InputDecoration(
