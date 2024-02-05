@@ -46,7 +46,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
         currentIndex: selectedIndex,
-        selectedItemColor: Colors.amber[800],
+        selectedItemColor: const Color.fromARGB(255, 11, 167, 240),
         onTap: onItemTapped,
         backgroundColor: Colors.white,
       ),
