@@ -1,6 +1,8 @@
+import 'package:dormdee/controllers/dorm_controller.dart';
 import 'package:dormdee/pages/profile_page.dart';
 import 'package:dormdee/pages/upload_dorm.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -11,6 +13,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int selectedIndex = 0;
+  final dormController = Get.put(DormController());
 
   void onItemTapped(int index) {
     setState(() {

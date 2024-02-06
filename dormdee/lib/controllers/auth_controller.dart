@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dormdee/utilities/error_snackbar.dart';
 import 'package:dormdee/utilities/show_loading.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
@@ -33,8 +34,7 @@ class AuthController extends GetxController {
         clearTextField();
         Get.back();
       } else {
-        Get.snackbar("Error", "Password does not match!",
-            snackPosition: SnackPosition.BOTTOM);
+        showErrorSnackbar("Error", "Password does not match!");
       }
     } on FirebaseAuthException catch (e) {
       Get.back();

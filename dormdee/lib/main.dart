@@ -1,4 +1,4 @@
-import 'package:dormdee/controller/auth_controller.dart';
+import 'package:dormdee/controllers/auth_controller.dart';
 import 'package:dormdee/pages/authen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
