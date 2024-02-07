@@ -1,9 +1,8 @@
 import 'package:dormdee/controllers/dorm_controller.dart';
 import 'package:dormdee/pages/profile_page.dart';
-import 'package:dormdee/pages/upload_dorm.dart';
 import 'package:flutter/material.dart';
-import 'package:dormdee/utilities/image_slider.dart';
 import 'package:get/get.dart';
+import 'package:dormdee/pages/In_home_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -23,7 +22,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   static const List<Widget> _widgetOptions = <Widget>[
-    ImageSlider(),
+    InHomePage(),
     Text(
       'Index 1: Favorites Page',
     ),
@@ -52,20 +51,6 @@ class _HomePageState extends State<HomePage> {
         onTap: onItemTapped,
         backgroundColor: Colors.white,
       ),
-      floatingActionButton: FloatingActionButton(
-          elevation: double.infinity,
-          backgroundColor: Colors.black,
-          onPressed: () {
-            Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const UploadDorm()));
-          },
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30),
-          ),
-          child: const Icon(
-            Icons.add,
-            color: Colors.white,
-          )),
       body: Center(
         child: _widgetOptions.elementAt(selectedIndex),
       ),
