@@ -50,9 +50,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     style: ElevatedButton.styleFrom(
                         minimumSize: const Size(50, 40),
                         backgroundColor: Colors.black87),
-                    onPressed: () {
-                      FirebaseAuth.instance.signOut();
-                    },
+                    onPressed: () {},
                     child: const Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [

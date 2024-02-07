@@ -12,6 +12,7 @@ class AuthController extends GetxController {
   TextEditingController confirmPasswordController = TextEditingController();
   TextEditingController phoneNumberController = TextEditingController();
   TextEditingController userNameController = TextEditingController();
+  RxBool hidePassword = true.obs;
 
   void signUp() async {
     try {

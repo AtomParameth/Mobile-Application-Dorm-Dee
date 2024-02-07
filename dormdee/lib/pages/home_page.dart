@@ -1,6 +1,7 @@
 import 'package:dormdee/pages/profile_page.dart';
 import 'package:dormdee/pages/upload_dorm.dart';
 import 'package:flutter/material.dart';
+import 'package:dormdee/utilities/image_slider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -19,9 +20,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   static const List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'Index 0: Home',
-    ),
+    ImageSlider(),
     Text(
       'Index 1: Favorites Page',
     ),
