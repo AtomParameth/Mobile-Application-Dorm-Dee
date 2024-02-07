@@ -1,8 +1,9 @@
 import 'package:dormdee/controllers/dorm_controller.dart';
 import 'package:dormdee/pages/profile_page.dart';
+import 'package:dormdee/pages/upload_dorm.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:dormdee/pages/In_home_page.dart';
+import 'package:get/get.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -31,6 +32,22 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: (selectedIndex == 0 || selectedIndex == 1)
+          ? FloatingActionButton(
+              elevation: double.infinity,
+              backgroundColor: Colors.black,
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const UploadDorm()));
+              },
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30),
+              ),
+              child: const Icon(
+                Icons.add,
+                color: Colors.white,
+              ))
+          : null,
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -51,8 +68,10 @@ class _HomePageState extends State<HomePage> {
         onTap: onItemTapped,
         backgroundColor: Colors.white,
       ),
-      body: Center(
-        child: _widgetOptions.elementAt(selectedIndex),
+      body: SingleChildScrollView(
+        child: Center(
+          child: _widgetOptions.elementAt(selectedIndex),
+        ),
       ),
     );
   }

@@ -3,28 +3,34 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class DormModel {
   final String name;
   final String address;
-  final String description;
+  final String information;
   final String price;
   final String imageUrl;
   final int rating;
+  final String category;
+  final String contact;
 
   DormModel({
     required this.name,
     required this.address,
-    required this.description,
+    required this.information,
     required this.price,
     required this.imageUrl,
     this.rating = 0,
+    this.category = "",
+    this.contact = "",
   });
 
   static DormModel empty() {
     return DormModel(
       name: "",
       address: "",
-      description: "",
+      information: "",
       price: "",
       imageUrl: "",
       rating: 0,
+      category: "",
+      contact: "",
     );
   }
 
@@ -32,10 +38,12 @@ class DormModel {
     return {
       "name": name,
       "address": address,
-      "description": description,
+      "information": information,
       "price": price,
       "imageUrl": imageUrl,
       "rating": rating,
+      "category": category,
+      "contact": contact,
     };
   }
 
@@ -48,10 +56,12 @@ class DormModel {
       return DormModel(
         name: data["name"] ?? "",
         address: data["address"] ?? "",
-        description: data["description"] ?? "",
+        information: data["information"] ?? "",
         price: data["price"] ?? "",
         imageUrl: data["imageUrl"] ?? "",
         rating: data["rating"] ?? 0,
+        category: data["category"] ?? "",
+        contact: data["contact"] ?? "",
       );
     }
   }

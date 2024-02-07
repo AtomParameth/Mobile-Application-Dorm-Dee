@@ -33,25 +33,29 @@ class InHomePageState extends State<InHomePage> {
             Icons.add,
             color: Colors.white,
           )),
-      body: const Column(children: [
-        SizedBox(height: 20),
-        Row(
-          children: [
-            SizedBox(width: 20),
-            Text(
-              "Top Rated",
-              style: TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black87),
-            ),
-          ],
-        ),
-        SizedBox(height: 20),
-        ImageSlider(),
-        SizedBox(height: 60),
-        DormDetail()
-      ]),
+      body: const SingleChildScrollView(
+        child: Column(children: [
+          SizedBox(height: 20),
+          Row(
+            children: [
+              SizedBox(width: 20),
+              Text(
+                "Top Rated",
+                style: TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black87),
+              ),
+            ],
+          ),
+          SizedBox(height: 20),
+          ImageSlider(),
+          SizedBox(height: 60),
+          SingleChildScrollView(
+            child: DormDetail(),
+          )
+        ]),
+      ),
     );
   }
 }
