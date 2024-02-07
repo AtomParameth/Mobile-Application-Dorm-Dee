@@ -27,7 +27,7 @@ class _HomePageState extends State<HomePage> {
   static final List<Widget> _widgetOptions = <Widget>[
     buildBody(),
     const Text(
-      'Index 1: Favorites Page',
+      'No favorites dormitory is added',
     ),
     const ProfilePage()
   ];
@@ -98,7 +98,10 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
         SizedBox(height: 20),
-        ImageSlider(),
+        ImageSlider(
+          imageUrl:
+              "https://lh3.googleusercontent.com/proxy/g4rizQ8ZxcsceMMxPcF9JRroCAeYQZhjtiGlp09tY5Qv8KWkxlOhj8-v-D6btUrb32UASyudzdmyQ2dgREVY9NLOen-u5uExEAuSUvGpyzEhOBu_dRPbEA",
+        ),
         DormCard(),
       ],
     );

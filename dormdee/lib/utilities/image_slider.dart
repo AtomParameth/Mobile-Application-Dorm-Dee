@@ -2,11 +2,11 @@ import 'package:dormdee/controllers/dorm_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dots_indicator/dots_indicator.dart';
-import 'package:dormdee/models/dorm_model.dart';
+import 'package:get/get.dart';
 
 class ImageSlider extends StatefulWidget {
-  const ImageSlider({Key? key}) : super(key: key);
-
+  const ImageSlider({Key? key, required this.imageUrl}) : super(key: key);
+  final String imageUrl;
   @override
   State<ImageSlider> createState() => _ImageSliderState();
 }
@@ -14,7 +14,7 @@ class ImageSlider extends StatefulWidget {
 class _ImageSliderState extends State<ImageSlider> {
   CarouselController controller = CarouselController();
   int currentPageIndex = 0;
-  final DormController dormController = DormController();
+  final dormController = Get.put(DormController());
   @override
   void initState() {
     controller = CarouselController();
@@ -36,11 +36,9 @@ class _ImageSliderState extends State<ImageSlider> {
                 color: Colors.amber,
                 borderRadius: BorderRadius.all(Radius.circular(15)),
               ),
-              child: Center(
-                child: Text(
-                  'text $i',
-                  style: const TextStyle(fontSize: 16.0),
-                ),
+              child: Image.network(
+                widget.imageUrl,
+                fit: BoxFit.fill,
               ),
             );
           }).toList(),
