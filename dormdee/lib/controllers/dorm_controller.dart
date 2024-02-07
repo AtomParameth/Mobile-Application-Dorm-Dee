@@ -60,7 +60,7 @@ class DormController extends GetxController {
       contact: contact.text,
     );
     addDorm(dorm);
-    Get.to(const HomePage());
+    Get.to(() => const HomePage());
   }
 
   Future<void> addDorm(DormModel dorm) async {

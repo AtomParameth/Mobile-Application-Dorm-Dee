@@ -1,6 +1,8 @@
+import 'package:dormdee/pages/edit_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:get/get.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -51,7 +53,9 @@ class _ProfilePageState extends State<ProfilePage> {
                       style: ElevatedButton.styleFrom(
                           minimumSize: const Size(50, 40),
                           backgroundColor: Colors.black87),
-                      onPressed: () {},
+                      onPressed: () {
+                        Get.to(const EditProfilePage());
+                      },
                       child: const Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
