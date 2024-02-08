@@ -86,7 +86,7 @@ class _HomePageState extends State<HomePage> {
 
   static Widget buildBody() {
     return ListView(
-      children: [
+      children: const [
         SizedBox(height: 20),
         Row(
           children: [
@@ -100,7 +100,7 @@ class _HomePageState extends State<HomePage> {
         SizedBox(height: 20),
         ImageSlider(
           imageUrl:
-              "https://lh3.googleusercontent.com/proxy/g4rizQ8ZxcsceMMxPcF9JRroCAeYQZhjtiGlp09tY5Qv8KWkxlOhj8-v-D6btUrb32UASyudzdmyQ2dgREVY9NLOen-u5uExEAuSUvGpyzEhOBu_dRPbEA",
+              "https://studocu.com/blog/wp-content/uploads/2020/09/slovenia.jpg",
         ),
         DormCard(),
       ],
