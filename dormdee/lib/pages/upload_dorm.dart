@@ -1,6 +1,7 @@
 import 'package:dormdee/controllers/dorm_controller.dart';
 import 'package:dormdee/utilities/text_field.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class UploadDorm extends StatelessWidget {
   const UploadDorm({Key? key}) : super(key: key);
@@ -16,16 +17,37 @@ class UploadDorm extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             ElevatedButton(
-                onPressed: () async {
-                  try {
-                    final imageUrl =
-                        await DormController.instance.uploadDormImage();
-                    DormController.instance.imageUrl = imageUrl;
-                  } catch (e) {
-                    throw "Something went wrong $e";
-                  }
-                },
-                child: const Text("Upload Dorm Image")),
+              style: ElevatedButton.styleFrom(
+                  minimumSize: const Size(250, 250),
+                  backgroundColor: const Color.fromARGB(221, 244, 224, 248),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(200))),
+              onPressed: () async {
+                try {
+                  final imageUrl =
+                      await DormController.instance.uploadDormImage();
+                  DormController.instance.imageUrl = imageUrl;
+                } catch (e) {
+                  throw "Something went wrong $e";
+                }
+              },
+              child: Obx(() {
+                return DormController.instance.imageUrlRx.value == ""
+                    ? const Icon(
+                        Icons.add_a_photo,
+                        size: 50.0,
+                      )
+                    : FittedBox(
+                        clipBehavior: Clip.hardEdge,
+                        child: Image.network(
+                          DormController.instance.imageUrlRx.value,
+                          fit: BoxFit.fill,
+                          width: 250,
+                          height: 250,
+                        ),
+                      );
+              }),
+            ),
             AppTextField(
                 controller: DormController.instance.name, title: "Dorm Name"),
             AppTextField(
@@ -43,7 +65,7 @@ class UploadDorm extends StatelessWidget {
                   DormController.instance
                       .uploadDorm(DormController.instance.imageUrl);
                 },
-                child: const Text("Upload"))
+                child: const Text("Submit"))
           ],
         ),
       ),

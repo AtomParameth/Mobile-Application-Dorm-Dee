@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dormdee/pages/profile_page.dart';
 import 'package:dormdee/utilities/error_snackbar.dart';
 import 'package:dormdee/utilities/show_loading.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -78,12 +77,12 @@ class AuthController extends GetxController {
     try {
       await FirebaseFirestore.instance
           .collection("users")
-          .doc(firebaseUser.value!.uid)
+          .doc(FirebaseAuth.instance.currentUser!.uid)
           .update({
         "phone_number": phoneNumberController.text.trim(),
         "username": userNameController.text.trim(),
       });
-      Get.to(() => const ProfilePage());
+      Get.back();
     } on FirebaseException catch (e) {
       showErrorSnackbar("Error", e.message.toString());
     }
