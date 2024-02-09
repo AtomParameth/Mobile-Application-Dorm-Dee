@@ -1,5 +1,6 @@
 import 'package:dormdee/controllers/dorm_controller.dart';
 import 'package:dormdee/pages/dorm_info_page.dart';
+import 'package:dormdee/utilities/rating_bart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -24,11 +25,21 @@ class DormCardState extends State<DormCard> {
             physics: const NeverScrollableScrollPhysics(),
             itemBuilder: (BuildContext context, int index) {
               return Container(
-                margin: const EdgeInsets.symmetric(vertical: 10),
-                padding: const EdgeInsets.symmetric(vertical: 20),
+                margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 30,
+                ),
                 decoration: BoxDecoration(
-                  color: Colors.black87,
+                  color: Colors.white,
                   borderRadius: BorderRadius.circular(20),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Color.fromARGB(67, 58, 58, 58),
+                      spreadRadius: 0.1,
+                      blurRadius: 5,
+                      offset: Offset(0, 3),
+                    )
+                  ],
                 ),
                 width: MediaQuery.of(context).size.width,
                 child: Row(
@@ -39,27 +50,31 @@ class DormCardState extends State<DormCard> {
                             borderRadius: BorderRadius.circular(40)),
                         width: 100,
                         height: 100,
-                        child: Image.network(
-                          dormController.dorms[index].imageUrl,
-                          fit: BoxFit.fill,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(15),
+                          child: Image.network(
+                            dormController.dorms[index].imageUrl,
+                            fit: BoxFit.fill,
+                          ),
                         ),
                       ),
                       Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(dormController.dorms[index].name,
                               style: const TextStyle(
-                                color: Colors.white,
+                                color: Colors.black,
                               )),
-                          Text(dormController.dorms[index].rating.toString(),
-                              style: const TextStyle(
-                                color: Colors.white,
-                              )),
+                          RatingBarApp(
+                            rating: dormController.dorms[index].rating.toInt(),
+                            itemSize: 20,
+                          ),
                           ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.white,
-                                  minimumSize: const Size(60, 40)),
+                                  backgroundColor:
+                                      const Color.fromARGB(255, 32, 32, 32),
+                                  minimumSize: const Size(40, 40)),
                               onPressed: () {
                                 Navigator.push(
                                     context,
@@ -68,7 +83,11 @@ class DormCardState extends State<DormCard> {
                                               dorm: dormController.dorms[index],
                                             )));
                               },
-                              child: const Text("View Details"))
+                              child: const Text(
+                                "View Details",
+                                style: TextStyle(
+                                    fontSize: 10, color: Colors.white),
+                              ))
                         ],
                       )
                     ]),

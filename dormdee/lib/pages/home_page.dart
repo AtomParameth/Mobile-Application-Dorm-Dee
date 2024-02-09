@@ -1,6 +1,7 @@
 import 'package:dormdee/controllers/dorm_controller.dart';
 import 'package:dormdee/pages/profile_page.dart';
 import 'package:dormdee/pages/upload_dorm.dart';
+import 'package:dormdee/utilities/dorpdown_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:dormdee/utilities/search_bar.dart';
 import 'package:dormdee/utilities/image_slider.dart';
@@ -85,25 +86,32 @@ class _HomePageState extends State<HomePage> {
   }
 
   static Widget buildBody() {
-    return ListView(
-      children: const [
-        SizedBox(height: 20),
-        Row(
-          children: [
-            SizedBox(width: 40),
-            Text(
-              "Top Rated",
-              style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-            ),
-          ],
-        ),
-        SizedBox(height: 20),
-        ImageSlider(
-          imageUrl:
-              "https://studocu.com/blog/wp-content/uploads/2020/09/slovenia.jpg",
-        ),
-        DormCard(),
-      ],
+    return Container(
+      color: const Color.fromARGB(255, 245, 245, 245),
+      child: ListView(
+        children: const [
+          SizedBox(height: 20),
+          Row(
+            children: [
+              SizedBox(width: 40),
+              Text(
+                "Top Rated",
+                style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+          SizedBox(height: 20),
+          ImageSlider(
+            imageUrl:
+                "https://studocu.com/blog/wp-content/uploads/2020/09/slovenia.jpg",
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [DropDownMenu(), DropDownMenu(), DropDownMenu()],
+          ),
+          DormCard(),
+        ],
+      ),
     );
   }
 }

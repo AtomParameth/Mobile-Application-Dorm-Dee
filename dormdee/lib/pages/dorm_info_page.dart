@@ -1,7 +1,7 @@
+import 'package:dormdee/utilities/rating_bart.dart';
 import 'package:flutter/material.dart';
 import 'package:dormdee/models/dorm_model.dart';
 import 'package:dormdee/utilities/image_slider.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class DormInfoPage extends StatefulWidget {
   const DormInfoPage({Key? key, required this.dorm}) : super(key: key);
@@ -13,6 +13,7 @@ class DormInfoPage extends StatefulWidget {
 }
 
 class _DormInfoPageState extends State<DormInfoPage> {
+  int rating = 0;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -33,22 +34,7 @@ class _DormInfoPageState extends State<DormInfoPage> {
                         content: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            RatingBar.builder(
-                              initialRating: 0,
-                              minRating: 0,
-                              direction: Axis.horizontal,
-                              allowHalfRating: true,
-                              itemCount: 5,
-                              itemPadding:
-                                  const EdgeInsets.symmetric(horizontal: 4.0),
-                              itemBuilder: (context, _) => const Icon(
-                                Icons.star,
-                                color: Colors.amber,
-                              ),
-                              onRatingUpdate: (rating) {
-                                print(rating);
-                              },
-                            ),
+                            RatingBarApp(rating: rating, itemSize: 30),
                             const SizedBox(
                               height: 10,
                             ),

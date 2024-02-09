@@ -16,13 +16,8 @@ class UploadDorm extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  minimumSize: const Size(250, 250),
-                  backgroundColor: const Color.fromARGB(221, 244, 224, 248),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(200))),
-              onPressed: () async {
+            GestureDetector(
+              onTap: () async {
                 try {
                   final imageUrl =
                       await DormController.instance.uploadDormImage();
@@ -33,17 +28,19 @@ class UploadDorm extends StatelessWidget {
               },
               child: Obx(() {
                 return DormController.instance.imageUrlRx.value == ""
-                    ? const Icon(
-                        Icons.add_a_photo,
-                        size: 50.0,
+                    ? const CircleAvatar(
+                        radius: 100,
+                        child: Icon(
+                          Icons.add_a_photo,
+                          size: 50.0,
+                        ),
                       )
-                    : FittedBox(
-                        clipBehavior: Clip.hardEdge,
+                    : ClipOval(
                         child: Image.network(
                           DormController.instance.imageUrlRx.value,
                           fit: BoxFit.fill,
-                          width: 250,
-                          height: 250,
+                          width: 200,
+                          height: 200,
                         ),
                       );
               }),

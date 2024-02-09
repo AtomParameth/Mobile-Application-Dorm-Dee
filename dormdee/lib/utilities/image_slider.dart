@@ -36,9 +36,12 @@ class _ImageSliderState extends State<ImageSlider> {
                 color: Colors.amber,
                 borderRadius: BorderRadius.all(Radius.circular(15)),
               ),
-              child: Image.network(
-                widget.imageUrl,
-                fit: BoxFit.fill,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(15),
+                child: Image.network(
+                  widget.imageUrl,
+                  fit: BoxFit.fill,
+                ),
               ),
             );
           }).toList(),
