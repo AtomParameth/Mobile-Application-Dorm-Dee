@@ -23,11 +23,11 @@ class _ProfilePageState extends State<ProfilePage> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            FutureBuilder<DocumentSnapshot>(
-              future: FirebaseFirestore.instance
+            StreamBuilder<DocumentSnapshot>(
+              stream: FirebaseFirestore.instance
                   .collection('users')
                   .doc(authUser!.uid)
-                  .get(),
+                  .snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const CircularProgressIndicator();
@@ -118,7 +118,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 );
               },
             ),
-            const SizedBox(height: 150.0),
+            const SizedBox(height: 100.0),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                   elevation: 5,
