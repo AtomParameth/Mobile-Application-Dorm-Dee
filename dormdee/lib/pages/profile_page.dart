@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -44,12 +45,23 @@ class _ProfilePageState extends State<ProfilePage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     const SizedBox(height: 20.0),
-                    const CircleAvatar(
+                    CircleAvatar(
                       radius: 80,
-                      child: Icon(
-                        Icons.person,
-                        size: 80,
-                      ),
+                      child: userData["profilePicture"] == ""
+                          ? const Icon(
+                              Icons.person,
+                              size: 80,
+                            )
+                          : Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                  image:
+                                      NetworkImage(userData["profilePicture"]),
+                                  fit: BoxFit.fill,
+                                ),
+                              ),
+                            ),
                     ),
                     const SizedBox(height: 20.0),
                     ElevatedButton(
@@ -99,17 +111,17 @@ class _ProfilePageState extends State<ProfilePage> {
                         children: [
                           ListTile(
                             leading: const Icon(Icons.person),
-                            title: Text(userData['username']),
+                            title: Text(userData['userName'].toString()),
                           ),
                           const Divider(),
                           ListTile(
                             leading: const Icon(Icons.email),
-                            title: Text(userData['email']),
+                            title: Text(userData['email'].toString()),
                           ),
                           const Divider(),
                           ListTile(
                             leading: const Icon(Icons.phone),
-                            title: Text(userData['phone_number']),
+                            title: Text(userData['phoneNumber'].toString()),
                           ),
                         ],
                       ),
@@ -125,6 +137,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   minimumSize: const Size(250, 50),
                   backgroundColor: const Color.fromARGB(255, 255, 121, 116)),
               onPressed: () {
+                GoogleSignIn().signOut();
                 FirebaseAuth.instance.signOut();
               },
               child: const Text(

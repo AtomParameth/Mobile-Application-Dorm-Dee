@@ -160,7 +160,8 @@ class LoginAppPageState extends State<LoginAppPage> {
                     "Login with Google",
                     "images/google_icon.png",
                     Colors.white,
-                    const Color.fromARGB(255, 40, 40, 40)),
+                    const Color.fromARGB(255, 40, 40, 40),
+                    onPressed: AuthController.instance.googleSignIn),
                 ButtonBar(
                   alignment: MainAxisAlignment.center,
                   children: [
@@ -230,11 +231,12 @@ class LoginAppPageState extends State<LoginAppPage> {
   }
 
   Widget _buildButtonWithImage(
-      String text, String imgAsset, Color textColor, Color backgroundColor) {
+      String text, String imgAsset, Color textColor, Color backgroundColor,
+      {Function()? onPressed}) {
     return Padding(
         padding: const EdgeInsets.only(left: 30, right: 30),
         child: ElevatedButton(
-          onPressed: () {},
+          onPressed: onPressed,
           style: ElevatedButton.styleFrom(
             elevation: 5,
             backgroundColor: backgroundColor,

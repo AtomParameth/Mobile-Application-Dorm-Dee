@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dormdee/models/user_model.dart';
 import 'package:dormdee/utilities/error_snackbar.dart';
 import 'package:dormdee/utilities/show_loading.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthController extends GetxController {
   static AuthController instance = Get.find();
@@ -61,16 +63,67 @@ class AuthController extends GetxController {
     }
   }
 
+  Future<void> googleSignIn() async {
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn(
+              clientId:
+                  "529712825170-9ora2lesp1ob77bbtg7oa02vem20eo46.apps.googleusercontent.com")
+          .signIn();
+      showLoading();
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser!.authentication;
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      final userCredential =
+          await FirebaseAuth.instance.signInWithCredential(credential);
+      final DocumentSnapshot<Map<String, dynamic>> userDoc =
+          await FirebaseFirestore.instance
+              .collection("users")
+              .doc(userCredential.user!.uid)
+              .get();
+      if (!userDoc.exists) {
+        storeGoogleUser(userCredential);
+      }
+    } on FirebaseAuthException catch (e) {
+      showErrorSnackbar("Error", e.message.toString());
+    } finally {
+      Get.back();
+    }
+  }
+
+  void storeGoogleUser(UserCredential userCredential) async {
+    if (userCredential.user != null) {
+      final User user = userCredential.user!;
+      final UserModel userModel = UserModel(
+        id: user.uid,
+        userName: user.displayName ?? "",
+        email: user.email ?? "",
+        phoneNumber: user.phoneNumber ?? "",
+        profilePicture: user.photoURL ?? "",
+      );
+      await FirebaseFirestore.instance
+          .collection("users")
+          .doc(user.uid)
+          .set(userModel.toJson());
+    }
+  }
+
   void addUser(
       String userId, String email, String phoneNumber, String userName) {
-    FirebaseFirestore.instance.collection("users").doc(userId).set(
-      {
-        "uid": userId,
-        "email": email,
-        "phone_number": phoneNumber,
-        "username": userName,
-      },
+    final newUser = UserModel(
+      id: userId,
+      email: email,
+      phoneNumber: phoneNumber,
+      userName: userName,
+      profilePicture: "",
     );
+    FirebaseFirestore.instance
+        .collection("users")
+        .doc(userId)
+        .set(newUser.toJson());
   }
 
   void updateUserInfo() async {
@@ -79,8 +132,8 @@ class AuthController extends GetxController {
           .collection("users")
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .update({
-        "phone_number": phoneNumberController.text.trim(),
-        "username": userNameController.text.trim(),
+        "phoneNumber": phoneNumberController.text.trim(),
+        "userName": userNameController.text.trim(),
       });
       Get.back();
     } on FirebaseException catch (e) {
