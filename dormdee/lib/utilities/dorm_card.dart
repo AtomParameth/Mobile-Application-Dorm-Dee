@@ -88,7 +88,7 @@ class DormCardState extends State<DormCard> {
                             size: 20,
                           ),
                           Text(
-                            '(${dormController.dorms[index].rating.toString()})',
+                            '(${dormController.dorms[index].rating.toStringAsFixed(1)})',
                             style: const TextStyle(
                               color: Colors.black,
                             ),
@@ -122,8 +122,8 @@ class DormCardState extends State<DormCard> {
                       ),
                       IconButton(
                         icon: dormController.dorms[index].isFavorite
-                            ? Icon(Icons.favorite, color: Colors.red)
-                            : Icon(Icons.favorite_border),
+                            ? const Icon(Icons.favorite, color: Colors.red)
+                            : const Icon(Icons.favorite_border),
                         onPressed: () {
                           toggleFavorite(index);
                         },

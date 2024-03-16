@@ -10,7 +10,6 @@ import 'package:image_picker/image_picker.dart';
 
 class DormController extends GetxController {
   static DormController get instance => Get.find();
-  
 
   void toggleFavorite(int index) {
     dorms[index].isFavorite = !dorms[index].isFavorite;
@@ -114,8 +113,9 @@ class DormController extends GetxController {
       });
       DocumentSnapshot dormDoc = await fs.collection("dorms").doc(id).get();
       List ratings = dormDoc.get("ratings");
-      double avgRating = ratings.fold(
-          0, (prev, cur) => (prev + cur["rating"]) / ratings.length);
+      double avgRating =
+          ratings.map((m) => m['rating']).reduce((a, b) => a + b) /
+              ratings.length;
       await fs.collection("dorms").doc(id).update({
         "rating": avgRating,
       });
