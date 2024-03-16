@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dormdee/models/user_model.dart';
 
 class RatingModel {
   final String user;
