@@ -7,6 +7,7 @@ import 'package:dormdee/utilities/search_bar.dart';
 import 'package:dormdee/utilities/image_slider.dart';
 import 'package:dormdee/utilities/dorm_card.dart';
 import 'package:get/get.dart';
+import 'package:dormdee/pages/favoritepage.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -27,9 +28,7 @@ class _HomePageState extends State<HomePage> {
 
   static final List<Widget> _widgetOptions = <Widget>[
     buildBody(),
-    const Text(
-      'No favorites dormitory is added',
-    ),
+    FavoritePage(),
     const ProfilePage()
   ];
   @override

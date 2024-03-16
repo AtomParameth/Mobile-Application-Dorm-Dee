@@ -10,6 +10,12 @@ import 'package:image_picker/image_picker.dart';
 
 class DormController extends GetxController {
   static DormController get instance => Get.find();
+  
+
+  void toggleFavorite(int index) {
+    dorms[index].isFavorite = !dorms[index].isFavorite;
+    update();
+  }
 
   final fs = FirebaseFirestore.instance;
   RxList<DormModel> dorms = <DormModel>[].obs;
