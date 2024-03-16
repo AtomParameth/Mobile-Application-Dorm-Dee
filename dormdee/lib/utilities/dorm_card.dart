@@ -42,8 +42,11 @@ class DormCardState extends State<DormCard> {
               ),
               width: MediaQuery.of(context).size.width,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  const SizedBox(
+                    width: 20,
+                  ),
                   Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(40),
@@ -58,6 +61,9 @@ class DormCardState extends State<DormCard> {
                       ),
                     ),
                   ),
+                  const SizedBox(
+                    width: 20,
+                  ),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -66,10 +72,23 @@ class DormCardState extends State<DormCard> {
                           style: const TextStyle(
                             color: Colors.black,
                           )),
-                      RatingBarApp(
-                        rating: dormController.dorms[index].rating.toInt(),
-                        itemSize: 20,
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.star,
+                            color: Colors.amber,
+                            size: 20,
+                          ),
+                          Text(
+                            '(${dormController.dorms[index].rating.toString()})',
+                            style: const TextStyle(
+                              color: Colors.black,
+                            ),
+                          ),
+                        ],
                       ),
+                      const SizedBox(height: 10),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                             backgroundColor:

@@ -7,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:dormdee/models/dorm_model.dart';
 import 'package:dormdee/utilities/image_slider.dart';
+import 'package:get/get.dart';
 
 class DormInfoPage extends StatefulWidget {
   const DormInfoPage({Key? key, required this.dorm, required this.dormId})
@@ -21,6 +22,7 @@ class DormInfoPage extends StatefulWidget {
 
 class _DormInfoPageState extends State<DormInfoPage> {
   int rating = 4;
+  TextEditingController descriptionController = TextEditingController();
   final currentUser = FirebaseAuth.instance.currentUser;
   @override
   Widget build(BuildContext context) {
@@ -47,6 +49,7 @@ class _DormInfoPageState extends State<DormInfoPage> {
                               height: 10,
                             ),
                             TextFormField(
+                              controller: descriptionController,
                               decoration: const InputDecoration(
                                   contentPadding: EdgeInsets.all(30),
                                   hintText: 'Description...',
@@ -70,7 +73,7 @@ class _DormInfoPageState extends State<DormInfoPage> {
 
                                 final ratedDorm = RatingModel(
                                   rating: rating,
-                                  description: "Make it dynamic di Atom",
+                                  description: descriptionController.text,
                                   userImage: userDoc.get("profilePicture"),
                                   user: userDoc.get("userName"),
                                   userId: currentUser!.uid,
@@ -163,44 +166,41 @@ class _DormInfoPageState extends State<DormInfoPage> {
                     "Comments",
                     style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
                   ),
-                  // Padding(
-                  //   padding:
-                  //       const EdgeInsets.symmetric(horizontal: 0, vertical: 5),
-                  //   child: TextFormField(
-                  //     decoration: const InputDecoration(
-                  //         contentPadding: EdgeInsets.all(10),
-                  //         label: Text("Comments..."),
-                  //         border: OutlineInputBorder(
-                  //             borderRadius:
-                  //                 BorderRadius.all(Radius.circular(20)))),
-                  //   ),
-                  // ),
-                  const Text("อย่าลืมแก้ข้างล่างนะงับ"),
-                  //แก้ตรงนี้นะงับเอาคอมเม้นออกแล้วแก้ซะ
-                  // Expanded(
-                  //   child: Column(
-                  //     children: List.generate(
-                  //         widget.dorm.ratings.length,
-                  //         (index) => Row(children: [
-                  //               widget.dorm.ratings[index].userImage == ""
-                  //                   ? CircleAvatar(
-                  //                       backgroundImage: NetworkImage(widget
-                  //                           .dorm.ratings[index].userImage),
-                  //                     )
-                  //                   : const CircleAvatar(
-                  //                       child: Icon(Icons.person),
-                  //                     ),
-                  //               Column(
-                  //                 children: [
-                  //                   Text(widget.dorm.ratings[index].user),
-                  //                   Text(
-                  //                       widget.dorm.ratings[index].description),
-                  //                 ],
-                  //               ),
-                  //             ])),
-                  //   ),
-                  // ),
-                  // จบตรงนี้
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: List.generate(
+                          widget.dorm.ratings.length,
+                          (index) => Row(children: [
+                                widget.dorm.ratings[index].userImage != ""
+                                    ? CircleAvatar(
+                                        backgroundImage: NetworkImage(widget
+                                            .dorm.ratings[index].userImage),
+                                      )
+                                    : const CircleAvatar(
+                                        child: Icon(Icons.person),
+                                      ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 0, vertical: 10),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(widget.dorm.ratings[index].user),
+                                      Text(widget
+                                          .dorm.ratings[index].description),
+                                    ],
+                                  ),
+                                ),
+                              ])),
+                    ),
+                  ),
                   const SizedBox(
                     height: 10,
                   )

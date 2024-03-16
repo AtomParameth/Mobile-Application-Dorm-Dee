@@ -3,12 +3,22 @@ import 'package:dormdee/utilities/text_field.dart';
 import 'package:flutter/material.dart';
 
 class EditProfilePage extends StatefulWidget {
-  const EditProfilePage({Key? key}) : super(key: key);
+  final String userName;
+  final String phoneNumber;
+  const EditProfilePage(
+      {super.key, required this.userName, required this.phoneNumber});
   @override
   State<EditProfilePage> createState() => _EditProfilePageState();
 }
 
 class _EditProfilePageState extends State<EditProfilePage> {
+  @override
+  void initState() {
+    AuthController.instance.userNameController.text = widget.userName;
+    AuthController.instance.phoneNumberController.text = widget.phoneNumber;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

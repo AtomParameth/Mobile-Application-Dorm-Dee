@@ -67,7 +67,10 @@ class _ProfilePageState extends State<ProfilePage> {
                           minimumSize: const Size(50, 40),
                           backgroundColor: Colors.black87),
                       onPressed: () {
-                        Get.to(() => const EditProfilePage());
+                        Get.to(() => EditProfilePage(
+                              userName: userData['userName'].toString(),
+                              phoneNumber: userData['phoneNumber'].toString(),
+                            ));
                       },
                       child: const Row(
                         mainAxisSize: MainAxisSize.min,

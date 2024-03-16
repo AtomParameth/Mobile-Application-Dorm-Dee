@@ -17,6 +17,7 @@ class RatingBarState extends State<RatingBarApp> {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
       child: RatingBar.builder(
+        updateOnDrag: false,
         initialRating: widget.rating.toDouble(),
         minRating: 0,
         direction: Axis.horizontal,
