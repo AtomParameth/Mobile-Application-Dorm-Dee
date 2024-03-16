@@ -149,3 +149,8 @@ class AuthController extends GetxController {
     userNameController.clear();
   }
 }
+
+
+  
+
+  

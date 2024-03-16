@@ -1,4 +1,5 @@
 import 'package:dormdee/controllers/dorm_controller.dart';
+import 'package:dormdee/models/dorm_model.dart';
 import 'package:dormdee/pages/profile_page.dart';
 import 'package:dormdee/pages/upload_dorm.dart';
 import 'package:dormdee/utilities/dorpdown_menu.dart';
@@ -11,26 +12,31 @@ import 'package:dormdee/pages/favoritepage.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
-
+  
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
   int selectedIndex = 0;
+  String userId = "";
+
   final dormController = Get.put(DormController());
 
+ 
+  
+  
   void onItemTapped(int index) {
     setState(() {
       selectedIndex = index;
     });
   }
-
   static final List<Widget> _widgetOptions = <Widget>[
     buildBody(),
-    FavoritePage(),
+    
     const ProfilePage()
   ];
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(

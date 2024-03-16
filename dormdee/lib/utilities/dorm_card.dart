@@ -15,11 +15,7 @@ class DormCardState extends State<DormCard> {
   final dormController = Get.put(DormController());
 
   // Function to toggle favorite status
-  void toggleFavorite(int index) {
-    setState(() {
-      dormController.toggleFavorite(index);
-    });
-  }
+ 
 
   @override
   Widget build(BuildContext context) {
@@ -120,14 +116,7 @@ class DormCardState extends State<DormCard> {
                           ),
                         ),
                       ),
-                      IconButton(
-                        icon: dormController.dorms[index].isFavorite
-                            ? Icon(Icons.favorite, color: Colors.red)
-                            : Icon(Icons.favorite_border),
-                        onPressed: () {
-                          toggleFavorite(index);
-                        },
-                      ),
+                     
                     ],
                   )
                 ],

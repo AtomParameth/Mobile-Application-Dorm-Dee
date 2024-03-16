@@ -7,17 +7,12 @@ import 'package:dormdee/utilities/error_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-
+import 'package:dormdee/firebase_service/firebase_store.dart';
 class DormController extends GetxController {
   static DormController get instance => Get.find();
-  
+  final FirebaseFirestore fs = FirebaseFirestore.instance;
+  RxList<String> favoriteDorms = <String>[].obs;
 
-  void toggleFavorite(int index) {
-    dorms[index].isFavorite = !dorms[index].isFavorite;
-    update();
-  }
-
-  final fs = FirebaseFirestore.instance;
   RxList<DormModel> dorms = <DormModel>[].obs;
   RxList<RatingModel> ratings = <RatingModel>[].obs;
   TextEditingController name = TextEditingController();
@@ -29,11 +24,14 @@ class DormController extends GetxController {
   TextEditingController category = TextEditingController();
   TextEditingController contact = TextEditingController();
 
-  @override
-  void onInit() {
-    fetchDorms();
-    super.onInit();
-  }
+  Future<void> fetchFavoriteDorms() async {
+    try {
+      final favorite = await getFavoriteDorms();
+      favoriteDorms.assignAll(favorite);
+    } on FirebaseException catch (e) {
+      showErrorSnackbar("Error", e.message.toString());
+    }
+  } 
 
   Future<void> fetchDorms() async {
     try {
@@ -50,6 +48,17 @@ class DormController extends GetxController {
       ratings.assignAll(rating);
     } on FirebaseException catch (e) {
       showErrorSnackbar("Error", e.message.toString());
+    }
+  }
+
+  Future<List<String>> getFavoriteDorms() async {
+    try {
+      final snapshot = await fs.collection("users").doc("favorites").get();
+      final list = snapshot.get("dorms").map((docs) => docs.toString()).toList();
+      return list;
+    } on FirebaseException catch (e) {
+      showErrorSnackbar("Error", e.message.toString());
+      return [];
     }
   }
 
@@ -77,6 +86,16 @@ class DormController extends GetxController {
       return [];
     }
   }
+  Future<void> addFavoriteDorm(String id) async {
+    try {
+      await fs.collection("users").doc("favorites").update({
+        "dorms": FieldValue.arrayUnion([id]),
+      });
+      fetchFavoriteDorms();
+    } on FirebaseException catch (e) {
+      showErrorSnackbar("Error", e.message.toString());
+    }
+  }
 
   Future<void> uploadDorm(String imageUrl) async {
     final dorm = DormModel(
@@ -100,7 +119,7 @@ class DormController extends GetxController {
     try {
       DocumentReference ref = await fs.collection("dorms").add(dorm.toJson());
       dorm.id = ref.id;
-      await fs.collection("dorms").add(dorm.toJson());
+      await fs.collection("dorms").doc(dorm.id).update(dorm.toJson());
       fetchDorms();
     } on FirebaseException catch (e) {
       showErrorSnackbar("Error", e.message.toString());
@@ -139,4 +158,7 @@ class DormController extends GetxController {
       return imageUrl;
     }
   }
+  
 }
+
+  
