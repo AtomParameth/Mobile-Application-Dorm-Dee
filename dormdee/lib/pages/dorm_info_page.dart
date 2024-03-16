@@ -76,8 +76,6 @@ class _DormInfoPageState extends State<DormInfoPage> {
                                 debugPrint(
                                     DormController().ratingsRx.toString());
 
-                                debugPrint(rating.toString());
-
                                 DocumentSnapshot userDoc =
                                     await FirebaseFirestore.instance
                                         .collection('users')
