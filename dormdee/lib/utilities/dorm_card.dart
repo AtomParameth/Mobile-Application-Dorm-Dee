@@ -14,6 +14,13 @@ class DormCard extends StatefulWidget {
 class DormCardState extends State<DormCard> {
   final dormController = Get.put(DormController());
 
+  // Function to toggle favorite status
+  void toggleFavorite(int index) {
+    setState(() {
+      dormController.toggleFavorite(index);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -96,12 +103,14 @@ class DormCardState extends State<DormCard> {
                             minimumSize: const Size(40, 40)),
                         onPressed: () {
                           Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => DormInfoPage(
-                                        dorm: dormController.dorms[index],
-                                        dormId: dormController.dorms[index].id,
-                                      )));
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DormInfoPage(
+                                dorm: dormController.dorms[index],
+                                dormId: dormController.dorms[index].id,
+                              ),
+                            ),
+                          );
                         },
                         child: const Text(
                           "View Details",
@@ -110,7 +119,15 @@ class DormCardState extends State<DormCard> {
                             color: Colors.white,
                           ),
                         ),
-                      )
+                      ),
+                      IconButton(
+                        icon: dormController.dorms[index].isFavorite
+                            ? Icon(Icons.favorite, color: Colors.red)
+                            : Icon(Icons.favorite_border),
+                        onPressed: () {
+                          toggleFavorite(index);
+                        },
+                      ),
                     ],
                   )
                 ],

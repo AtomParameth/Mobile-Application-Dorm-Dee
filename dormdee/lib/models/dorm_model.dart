@@ -12,6 +12,7 @@ class DormModel {
   final String contact;
   final DateTime createdAt;
   final List<RatingModel> ratings;
+  bool isFavorite;
   String id;
 
   DormModel({
@@ -23,6 +24,7 @@ class DormModel {
     this.rating = 0,
     this.category = "",
     this.contact = "",
+    this.isFavorite = false,
     required this.createdAt,
     this.ratings = const [],
     required this.id,
