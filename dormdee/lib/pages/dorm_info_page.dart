@@ -10,11 +10,12 @@ import 'package:dormdee/utilities/image_slider.dart';
 import 'package:get/get.dart';
 
 class DormInfoPage extends StatefulWidget {
-  const DormInfoPage({Key? key, required this.dorm, required this.dormId})
+  DormInfoPage({Key? key, required this.dorm, required this.dormId})
       : super(key: key);
 
   final DormModel dorm;
   final String dormId;
+  final dormController = Get.put(DormController());
 
   @override
   State<DormInfoPage> createState() => _DormInfoPageState();
@@ -63,6 +64,9 @@ class _DormInfoPageState extends State<DormInfoPage> {
                           TextButton(
                               onPressed: () async {
                                 Navigator.of(context).pop();
+                                debugPrint(
+                                    DormController().ratingsRx.toString());
+
                                 debugPrint(rating.toString());
 
                                 DocumentSnapshot userDoc =
@@ -167,40 +171,46 @@ class _DormInfoPageState extends State<DormInfoPage> {
                     style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
                   ),
                   Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: List.generate(
-                          widget.dorm.ratings.length,
-                          (index) => Row(children: [
-                                widget.dorm.ratings[index].userImage != ""
-                                    ? CircleAvatar(
-                                        backgroundImage: NetworkImage(widget
-                                            .dorm.ratings[index].userImage),
-                                      )
-                                    : const CircleAvatar(
-                                        child: Icon(Icons.person),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 0, vertical: 10),
+                      child: Obx(
+                        () => Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: List.generate(
+                              widget.dormController.ratingsRx.length,
+                              (index) => Row(children: [
+                                    widget.dormController.ratingsRx[index]
+                                                .userImage !=
+                                            ""
+                                        ? CircleAvatar(
+                                            backgroundImage: NetworkImage(widget
+                                                .dormController
+                                                .ratingsRx[index]
+                                                .userImage),
+                                          )
+                                        : const CircleAvatar(
+                                            child: Icon(Icons.person),
+                                          ),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 0, vertical: 10),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(widget.dormController
+                                              .ratingsRx[index].user),
+                                          Text(widget.dormController
+                                              .ratingsRx[index].description),
+                                        ],
                                       ),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 0, vertical: 10),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(widget.dorm.ratings[index].user),
-                                      Text(widget
-                                          .dorm.ratings[index].description),
-                                    ],
-                                  ),
-                                ),
-                              ])),
-                    ),
-                  ),
+                                    ),
+                                  ])),
+                        ),
+                      )),
                   const SizedBox(
                     height: 10,
                   )

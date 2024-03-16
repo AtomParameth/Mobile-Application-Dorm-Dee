@@ -18,7 +18,7 @@ class DormController extends GetxController {
 
   final fs = FirebaseFirestore.instance;
   RxList<DormModel> dorms = <DormModel>[].obs;
-  RxList<RatingModel> ratings = <RatingModel>[].obs;
+  RxList<RatingModel> ratingsRx = <RatingModel>[].obs;
   TextEditingController name = TextEditingController();
   TextEditingController address = TextEditingController();
   TextEditingController information = TextEditingController();
@@ -46,7 +46,7 @@ class DormController extends GetxController {
   Future<void> fetchRatings(String id) async {
     try {
       final rating = await getRatings(id);
-      ratings.assignAll(rating);
+      ratingsRx.assignAll(rating);
     } on FirebaseException catch (e) {
       showErrorSnackbar("Error", e.message.toString());
     }
@@ -119,6 +119,7 @@ class DormController extends GetxController {
       await fs.collection("dorms").doc(id).update({
         "rating": avgRating,
       });
+      ratingsRx.assignAll(ratings.map((m) => RatingModel.fromMap(m)).toList());
       fetchDorms();
     } on FirebaseException catch (e) {
       showErrorSnackbar("Error", e.message.toString());
