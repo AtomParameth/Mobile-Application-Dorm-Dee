@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dormdee/firebase_service/firebase_storage_service.dart';
 import 'package:dormdee/models/dorm_model.dart';
+import 'package:dormdee/models/rating_model.dart';
 import 'package:dormdee/pages/home_page.dart';
 import 'package:dormdee/utilities/error_snackbar.dart';
 import 'package:flutter/material.dart';
@@ -58,6 +59,9 @@ class DormController extends GetxController {
       rating: 0,
       category: category.text,
       contact: contact.text,
+      createdAt: DateTime.now(),
+      ratings: [],
+      id: "",
     );
     addDorm(dorm);
     Get.to(() => const HomePage());
@@ -65,7 +69,27 @@ class DormController extends GetxController {
 
   Future<void> addDorm(DormModel dorm) async {
     try {
+      DocumentReference ref = await fs.collection("dorms").add(dorm.toJson());
+      dorm.id = ref.id;
       await fs.collection("dorms").add(dorm.toJson());
+      fetchDorms();
+    } on FirebaseException catch (e) {
+      showErrorSnackbar("Error", e.message.toString());
+    }
+  }
+
+  Future<void> rateDorm(String id, RatingModel rating) async {
+    try {
+      await fs.collection("dorms").doc(id).update({
+        "ratings": FieldValue.arrayUnion([rating.toJson()]),
+      });
+      DocumentSnapshot dormDoc = await fs.collection("dorms").doc(id).get();
+      List ratings = dormDoc.get("ratings");
+      double avgRating = ratings.fold(
+          0, (prev, cur) => (prev + cur["rating"]) / ratings.length);
+      await fs.collection("dorms").doc(id).update({
+        "rating": avgRating,
+      });
       fetchDorms();
     } on FirebaseException catch (e) {
       showErrorSnackbar("Error", e.message.toString());

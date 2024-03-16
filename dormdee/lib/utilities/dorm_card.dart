@@ -81,6 +81,7 @@ class DormCardState extends State<DormCard> {
                               MaterialPageRoute(
                                   builder: (context) => DormInfoPage(
                                         dorm: dormController.dorms[index],
+                                        dormId: dormController.dorms[index].id,
                                       )));
                         },
                         child: const Text(
