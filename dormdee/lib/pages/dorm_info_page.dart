@@ -81,19 +81,24 @@ class _DormInfoPageState extends State<DormInfoPage> {
             ),
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 40),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    "Information",
-                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Text(widget.dorm.information),
-                ],
+              child: Card(
+                color: Colors.white70,
+                surfaceTintColor: Colors.white,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Information",
+                      style:
+                          TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Text(widget.dorm.information),
+                  ],
+                ),
               ),
             ),
             const SizedBox(

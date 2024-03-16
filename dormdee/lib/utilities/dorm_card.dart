@@ -17,87 +17,194 @@ class DormCardState extends State<DormCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        width: MediaQuery.of(context).size.width,
-        height: 500,
-        padding: const EdgeInsets.symmetric(horizontal: 40),
-        child: Obx(
-          () => ListView.builder(
-            physics: const NeverScrollableScrollPhysics(),
-            itemBuilder: (BuildContext context, int index) {
-              return Container(
-                margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
-                padding: const EdgeInsets.symmetric(
-                  vertical: 30,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Color.fromARGB(67, 58, 58, 58),
-                      spreadRadius: 0.1,
-                      blurRadius: 5,
-                      offset: Offset(0, 3),
-                    )
-                  ],
-                ),
-                width: MediaQuery.of(context).size.width,
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      width: MediaQuery.of(context).size.width,
+      padding: const EdgeInsets.symmetric(horizontal: 40),
+      child: Obx(
+        () => Column(
+          children: List.generate(
+            dormController.dorms.length,
+            (index) => Container(
+              margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
+              padding: const EdgeInsets.symmetric(
+                vertical: 30,
+              ),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Color.fromARGB(67, 58, 58, 58),
+                    spreadRadius: 0.1,
+                    blurRadius: 5,
+                    offset: Offset(0, 3),
+                  )
+                ],
+              ),
+              width: MediaQuery.of(context).size.width,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(40),
+                    ),
+                    width: 100,
+                    height: 100,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child: Image.network(
+                        dormController.dorms[index].imageUrl,
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(40)),
-                        width: 100,
-                        height: 100,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(15),
-                          child: Image.network(
-                            dormController.dorms[index].imageUrl,
-                            fit: BoxFit.fill,
+                      Text(dormController.dorms[index].name,
+                          style: const TextStyle(
+                            color: Colors.black,
+                          )),
+                      RatingBarApp(
+                        rating: dormController.dorms[index].rating.toInt(),
+                        itemSize: 20,
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                const Color.fromARGB(255, 32, 32, 32),
+                            minimumSize: const Size(40, 40)),
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => DormInfoPage(
+                                        dorm: dormController.dorms[index],
+                                      )));
+                        },
+                        child: const Text(
+                          "View Details",
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: Colors.white,
                           ),
                         ),
-                      ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(dormController.dorms[index].name,
-                              style: const TextStyle(
-                                color: Colors.black,
-                              )),
-                          RatingBarApp(
-                            rating: dormController.dorms[index].rating.toInt(),
-                            itemSize: 20,
-                          ),
-                          ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor:
-                                      const Color.fromARGB(255, 32, 32, 32),
-                                  minimumSize: const Size(40, 40)),
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => DormInfoPage(
-                                              dorm: dormController.dorms[index],
-                                            )));
-                              },
-                              child: const Text(
-                                "View Details",
-                                style: TextStyle(
-                                    fontSize: 10, color: Colors.white),
-                              ))
-                        ],
                       )
-                    ]),
-              );
-            },
-            itemCount: DormController.instance.dorms.length,
+                    ],
+                  )
+                ],
+              ),
+            ),
           ),
-        ));
+        ),
+      ),
+    );
   }
 }
+
+// class DormCard extends StatefulWidget {
+//   const DormCard({Key? key}) : super(key: key);
+
+//   @override
+//   State<DormCard> createState() => DormCardState();
+// }
+
+// class DormCardState extends State<DormCard> {
+//   final dormController = Get.put(DormController());
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//         width: MediaQuery.of(context).size.width,
+//         height: 500,
+//         padding: const EdgeInsets.symmetric(horizontal: 40),
+//         child: SingleChildScrollView(
+//           child: Obx(
+//             () => ListView.builder(
+//               shrinkWrap: true,
+//               physics: const ClampingScrollPhysics(),
+//               itemBuilder: (BuildContext context, int index) {
+//                 return Container(
+//                   margin:
+//                       const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
+//                   padding: const EdgeInsets.symmetric(
+//                     vertical: 30,
+//                   ),
+//                   decoration: BoxDecoration(
+//                     color: Colors.white,
+//                     borderRadius: BorderRadius.circular(20),
+//                     boxShadow: const [
+//                       BoxShadow(
+//                         color: Color.fromARGB(67, 58, 58, 58),
+//                         spreadRadius: 0.1,
+//                         blurRadius: 5,
+//                         offset: Offset(0, 3),
+//                       )
+//                     ],
+//                   ),
+//                   width: MediaQuery.of(context).size.width,
+//                   child: Row(
+//                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//                       children: [
+//                         Container(
+//                           decoration: BoxDecoration(
+//                               borderRadius: BorderRadius.circular(40)),
+//                           width: 100,
+//                           height: 100,
+//                           child: ClipRRect(
+//                             borderRadius: BorderRadius.circular(15),
+//                             child: Image.network(
+//                               dormController.dorms[index].imageUrl,
+//                               fit: BoxFit.fill,
+//                             ),
+//                           ),
+//                         ),
+//                         Column(
+//                           mainAxisAlignment: MainAxisAlignment.spaceAround,
+//                           crossAxisAlignment: CrossAxisAlignment.start,
+//                           children: [
+//                             Text(dormController.dorms[index].name,
+//                                 style: const TextStyle(
+//                                   color: Colors.black,
+//                                 )),
+//                             RatingBarApp(
+//                               rating:
+//                                   dormController.dorms[index].rating.toInt(),
+//                               itemSize: 20,
+//                             ),
+//                             ElevatedButton(
+//                                 style: ElevatedButton.styleFrom(
+//                                     backgroundColor:
+//                                         const Color.fromARGB(255, 32, 32, 32),
+//                                     minimumSize: const Size(40, 40)),
+//                                 onPressed: () {
+//                                   Navigator.push(
+//                                       context,
+//                                       MaterialPageRoute(
+//                                           builder: (context) => DormInfoPage(
+//                                                 dorm:
+//                                                     dormController.dorms[index],
+//                                               )));
+//                                 },
+//                                 child: const Text(
+//                                   "View Details",
+//                                   style: TextStyle(
+//                                       fontSize: 10, color: Colors.white),
+//                                 ))
+//                           ],
+//                         )
+//                       ]),
+//                 );
+//               },
+//               itemCount: DormController.instance.dorms.length,
+//             ),
+//           ),
+//         ));
+//   }
+// }
+
+
 // class DormDetailState extends State<DormDetail> {
 //   @override
 //   Widget build(BuildContext context) {

@@ -41,10 +41,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 final userData = snapshot.data!.data() as Map<String, dynamic>;
 
                 return Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const SizedBox(height: 20.0),
+                    const SizedBox(height: 50.0),
                     CircleAvatar(
                       radius: 80,
                       child: userData["profilePicture"] == ""
@@ -63,7 +61,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               ),
                             ),
                     ),
-                    const SizedBox(height: 20.0),
+                    const SizedBox(height: 30.0),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
                           minimumSize: const Size(50, 40),
@@ -87,7 +85,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         ],
                       ),
                     ),
-                    const SizedBox(height: 30.0),
+                    const SizedBox(height: 40.0),
                     Container(
                       margin: const EdgeInsets.symmetric(
                           horizontal: 20, vertical: 0),
@@ -130,7 +128,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 );
               },
             ),
-            const SizedBox(height: 100.0),
+            const SizedBox(height: 60.0),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                   elevation: 5,
