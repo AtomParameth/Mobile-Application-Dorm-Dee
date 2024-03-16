@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:dormdee/controllers/auth_controller.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -14,7 +15,7 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   final authUser = FirebaseAuth.instance.currentUser;
-
+  AuthController authController = Get.put(AuthController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -140,6 +141,7 @@ class _ProfilePageState extends State<ProfilePage> {
               onPressed: () {
                 GoogleSignIn().signOut();
                 FirebaseAuth.instance.signOut();
+                authController.clearTextField();
               },
               child: const Text(
                 "Sign Out",

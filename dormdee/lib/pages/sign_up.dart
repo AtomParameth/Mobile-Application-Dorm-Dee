@@ -31,6 +31,16 @@ class SignUpPageState extends State<SignUpPage> {
   }
 
   @override
+  void initState() {
+    emailController.clear();
+    phoneNumberController.clear();
+    userNameController.clear();
+    passwordController.clear();
+    confirmPasswordController.clear();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,

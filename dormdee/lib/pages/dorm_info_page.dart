@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dormdee/controllers/dorm_controller.dart';
 import 'package:dormdee/models/rating_model.dart';
-
 import 'package:dormdee/utilities/rating_bart.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -22,9 +21,16 @@ class DormInfoPage extends StatefulWidget {
 }
 
 class _DormInfoPageState extends State<DormInfoPage> {
-  int rating = 4;
+  int rating = 0;
   TextEditingController descriptionController = TextEditingController();
   final currentUser = FirebaseAuth.instance.currentUser;
+
+  void handleRatingChange(int newRating) {
+    // Optionally update your state or display the new rating here
+    rating = newRating;
+    print('Updated rating: $newRating');
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -45,7 +51,10 @@ class _DormInfoPageState extends State<DormInfoPage> {
                         content: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            RatingBarApp(rating: rating, itemSize: 30),
+                            RatingBarApp(
+                              ratingScore: rating,
+                              onRatingChanged: handleRatingChange,
+                            ),
                             const SizedBox(
                               height: 10,
                             ),
@@ -85,6 +94,8 @@ class _DormInfoPageState extends State<DormInfoPage> {
                                 );
                                 DormController.instance
                                     .rateDorm(widget.dormId, ratedDorm);
+                                descriptionController.clear();
+                                handleRatingChange(0);
                               },
                               child: const Text("Submit")),
                           TextButton(
@@ -152,7 +163,7 @@ class _DormInfoPageState extends State<DormInfoPage> {
                     "Rating",
                     style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
                   ),
-                  Text(widget.dorm.rating.toString()),
+                  Text(widget.dorm.rating.toStringAsFixed(1)),
                   const Text(
                     "Zone",
                     style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),

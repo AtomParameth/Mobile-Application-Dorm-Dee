@@ -11,7 +11,7 @@ class FavoritePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Favorite Dorms'),
+        title: const Text('Favorite Dorms'),
       ),
       body: Obx(
         () => ListView.builder(
@@ -29,20 +29,18 @@ class FavoritePage extends StatelessWidget {
                   fit: BoxFit.cover,
                 ),
                 onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => DormInfoPage(
-                                dorm: dormController.dorms[index],
-                                dormId: dormController.dorms[index].id,
-                              ),
-                            ),
-                          );
-                        },
-
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DormInfoPage(
+                        dorm: dormController.dorms[index],
+                        dormId: dormController.dorms[index].id,
+                      ),
+                    ),
+                  );
+                },
               );
             } else {
-              // Return an empty container if the dorm is not a favorite
               return Container();
             }
           },

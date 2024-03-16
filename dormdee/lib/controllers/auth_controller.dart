@@ -135,6 +135,7 @@ class AuthController extends GetxController {
         "phoneNumber": phoneNumberController.text.trim(),
         "userName": userNameController.text.trim(),
       });
+      clearTextField();
       Get.back();
     } on FirebaseException catch (e) {
       showErrorSnackbar("Error", e.message.toString());

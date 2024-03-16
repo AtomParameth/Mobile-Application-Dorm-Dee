@@ -67,8 +67,11 @@ class _ForgetPWPageState extends State<ForgetPWPage> {
                 Container(
                   padding: const EdgeInsets.only(left: 20, right: 20),
                   child: ElevatedButton(
-                      onPressed: () {
-                        resetPassword();
+                      onPressed: () async {
+                        await resetPassword();
+                        Future.delayed(const Duration(seconds: 2), () {
+                          Navigator.pop(context);
+                        });
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor:
