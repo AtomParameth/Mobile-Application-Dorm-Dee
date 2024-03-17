@@ -32,6 +32,11 @@ class _DormInfoPageState extends State<DormInfoPage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
@@ -73,9 +78,6 @@ class _DormInfoPageState extends State<DormInfoPage> {
                           TextButton(
                               onPressed: () async {
                                 Navigator.of(context).pop();
-                                debugPrint(
-                                    DormController().ratingsRx.toString());
-
                                 DocumentSnapshot userDoc =
                                     await FirebaseFirestore.instance
                                         .collection('users')
@@ -182,20 +184,25 @@ class _DormInfoPageState extends State<DormInfoPage> {
                   Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 0, vertical: 10),
-                      child: Obx(
-                        () => Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: List.generate(
-                              widget.dormController.ratingsRx.length,
-                              (index) => Row(children: [
-                                    widget.dormController.ratingsRx[index]
-                                                .userImage !=
-                                            ""
+                      child: StreamBuilder<DormModel>(
+                        stream: widget.dormController.streamDorm(widget.dormId),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const CircularProgressIndicator();
+                          } else if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          } else {
+                            DormModel dorm = snapshot.data!;
+                            return Column(
+                              children: List.generate(
+                                dorm.ratings.length,
+                                (index) => Row(
+                                  children: [
+                                    dorm.ratings[index].userImage != ""
                                         ? CircleAvatar(
-                                            backgroundImage: NetworkImage(widget
-                                                .dormController
-                                                .ratingsRx[index]
-                                                .userImage),
+                                            backgroundImage: NetworkImage(
+                                                dorm.ratings[index].userImage),
                                           )
                                         : const CircleAvatar(
                                             child: Icon(Icons.person),
@@ -210,15 +217,17 @@ class _DormInfoPageState extends State<DormInfoPage> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          Text(widget.dormController
-                                              .ratingsRx[index].user),
-                                          Text(widget.dormController
-                                              .ratingsRx[index].description),
+                                          Text(dorm.ratings[index].user),
+                                          Text(dorm.ratings[index].description),
                                         ],
                                       ),
                                     ),
-                                  ])),
-                        ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          }
+                        },
                       )),
                   const SizedBox(
                     height: 10,

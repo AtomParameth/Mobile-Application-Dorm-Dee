@@ -10,7 +10,8 @@ import 'package:get/get.dart';
 import 'package:dormdee/pages/favoritepage.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  HomePage({super.key});
+  final dormController = Get.put(DormController());
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -18,12 +19,16 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int selectedIndex = 0;
-  final dormController = Get.put(DormController());
 
   void onItemTapped(int index) {
     setState(() {
       selectedIndex = index;
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
   }
 
   static final List<Widget> _widgetOptions = <Widget>[
@@ -88,10 +93,10 @@ class _HomePageState extends State<HomePage> {
     return SingleChildScrollView(
       child: Container(
         padding: const EdgeInsets.only(bottom: kBottomNavigationBarHeight),
-        child: const Column(
+        child: Column(
           children: [
-            SizedBox(height: 20),
-            Row(
+            const SizedBox(height: 20),
+            const Row(
               children: [
                 SizedBox(width: 40),
                 Text(
@@ -100,16 +105,26 @@ class _HomePageState extends State<HomePage> {
                 ),
               ],
             ),
-            SizedBox(height: 20),
-            ImageSlider(
+            const SizedBox(height: 20),
+            Obx(() {
+              if (DormController.instance.topRatedDorms.isNotEmpty) {
+                return Column(
+                    children: DormController.instance.topRatedDorms
+                        .map((dorm) => Text(dorm.name))
+                        .toList());
+              } else {
+                return const Text("No top rated dorms");
+              }
+            }),
+            const ImageSlider(
               imageUrl:
                   "https://studocu.com/blog/wp-content/uploads/2020/09/slovenia.jpg",
             ),
-            Row(
+            const Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [DropDownMenu(), DropDownMenu(), DropDownMenu()],
             ),
-            DormCard(),
+            const DormCard(),
           ],
         ),
       ),

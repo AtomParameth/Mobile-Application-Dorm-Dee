@@ -27,6 +27,7 @@ class DormController extends GetxController {
   RxString imageUrlRx = "".obs;
   TextEditingController category = TextEditingController();
   TextEditingController contact = TextEditingController();
+  RxList<DormModel> topRatedDorms = <DormModel>[].obs;
 
   @override
   void onInit() {
@@ -38,6 +39,9 @@ class DormController extends GetxController {
     try {
       final dorm = await getDorms();
       dorms.assignAll(dorm);
+      final topRated = dorm.toList()
+        ..sort((a, b) => b.rating.compareTo(a.rating));
+      topRatedDorms.assignAll(topRated.take(5));
     } on FirebaseException catch (e) {
       showErrorSnackbar("Error", e.message.toString());
     }
@@ -50,6 +54,16 @@ class DormController extends GetxController {
     } on FirebaseException catch (e) {
       showErrorSnackbar("Error", e.message.toString());
     }
+  }
+
+  Stream<DormModel> streamDorm(String dormId) {
+    return FirebaseFirestore.instance
+        .collection('dorms')
+        .doc(dormId)
+        .snapshots()
+        .map((doc) {
+      return DormModel.fromSnapshot(doc);
+    });
   }
 
   Future<List<DormModel>> getDorms() async {
@@ -92,7 +106,7 @@ class DormController extends GetxController {
       id: "",
     );
     addDorm(dorm);
-    Get.to(() => const HomePage());
+    Get.to(() => HomePage());
   }
 
   Future<void> addDorm(DormModel dorm) async {
