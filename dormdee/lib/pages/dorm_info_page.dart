@@ -45,6 +45,12 @@ class _DormInfoPageState extends State<DormInfoPage> {
         actions: [
           IconButton(
               onPressed: () {
+                widget.dormController.deleteDorm(widget.dormId);
+                Navigator.pop(context);
+              },
+              icon: const Icon(Icons.delete)),
+          IconButton(
+              onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(

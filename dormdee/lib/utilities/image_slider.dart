@@ -41,28 +41,47 @@ class _ImageSliderState extends State<ImageSlider> {
         children: [
           CarouselSlider(
             carouselController: controller,
-            items: [0, 1, 2, 3, 4].map((i) {
-              return Container(
-                width: MediaQuery.of(context).size.width,
-                margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                decoration: const BoxDecoration(
-                  color: Colors.amber,
-                  borderRadius: BorderRadius.all(Radius.circular(15)),
+            items: dormController.topRatedDorms.map((i) {
+              return Stack(children: [
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                  decoration: const BoxDecoration(
+                    color: Colors.amber,
+                    borderRadius: BorderRadius.all(Radius.circular(15)),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(15),
+                    child: Obx(() {
+                      if (DormController.instance.topRatedDorms.isNotEmpty) {
+                        return Image.network(
+                          i.imageUrl,
+                          fit: BoxFit.cover,
+                        );
+                      } else {
+                        return const Text("No top rated dorms");
+                      }
+                    }),
+                  ),
                 ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(15),
-                  child: Obx(() {
-                    if (DormController.instance.topRatedDorms.isNotEmpty) {
-                      return Image.network(
-                        DormController.instance.topRatedDorms[i].imageUrl,
-                        fit: BoxFit.cover,
-                      );
-                    } else {
-                      return const Text("No top rated dorms");
-                    }
-                  }),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8, right: 16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      const Icon(
+                        Icons.star,
+                        color: Colors.amber,
+                      ),
+                      Text(
+                        i.rating.toStringAsFixed(1),
+                        style:
+                            const TextStyle(fontSize: 15, color: Colors.white),
+                      )
+                    ],
+                  ),
                 ),
-              );
+              ]);
             }).toList(),
             options: CarouselOptions(
               onPageChanged: (index, reason) => setState(() {
