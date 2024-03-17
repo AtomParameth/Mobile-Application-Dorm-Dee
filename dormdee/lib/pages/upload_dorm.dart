@@ -1,5 +1,5 @@
 import 'package:dormdee/controllers/dorm_controller.dart';
-import 'package:dormdee/utilities/dorpdown_menu.dart';
+import 'package:dormdee/utilities/dropdown_upload_page.dart';
 import 'package:dormdee/utilities/text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -75,7 +75,7 @@ class UploadDorm extends StatelessWidget {
               const SizedBox(
                 height: 20,
               ),
-              const DropDownMenu(),
+              const DropDownUpload(),
               const SizedBox(
                 height: 50,
               ),

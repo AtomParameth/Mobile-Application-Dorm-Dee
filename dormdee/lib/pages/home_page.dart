@@ -109,7 +109,7 @@ class _HomePageState extends State<HomePage> {
             ImageSlider(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [DropDownMenu(), DropDownMenu(), DropDownMenu()],
+              children: [DropDownMenu()],
             ),
             DormCard(),
           ],

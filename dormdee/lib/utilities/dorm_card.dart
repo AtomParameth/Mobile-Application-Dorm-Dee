@@ -2,6 +2,7 @@ import 'package:dormdee/controllers/dorm_controller.dart';
 import 'package:dormdee/pages/dorm_info_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'dart:async';
 
 class DormCard extends StatefulWidget {
   const DormCard({Key? key}) : super(key: key);
@@ -12,6 +13,22 @@ class DormCard extends StatefulWidget {
 
 class DormCardState extends State<DormCard> {
   final dormController = Get.put(DormController());
+  late StreamSubscription _subscription;
+
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _subscription = dormController.filteredDormsStream.listen((_) {
+        dormController.update(); // Refresh UI when dorms changes
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _subscription.cancel();
+    super.dispose();
+  }
 
   // Function to toggle favorite status
   void toggleFavorite(int index) {
@@ -28,7 +45,7 @@ class DormCardState extends State<DormCard> {
       child: Obx(
         () => Column(
           children: List.generate(
-            dormController.dorms.length,
+            dormController.filteredDorms.length,
             (index) => Container(
               margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
               padding: const EdgeInsets.symmetric(
@@ -62,7 +79,7 @@ class DormCardState extends State<DormCard> {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(15),
                       child: Image.network(
-                        dormController.dorms[index].imageUrl,
+                        dormController.filteredDorms[index].imageUrl,
                         fit: BoxFit.fill,
                       ),
                     ),
@@ -74,7 +91,7 @@ class DormCardState extends State<DormCard> {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(dormController.dorms[index].name,
+                      Text(dormController.filteredDorms[index].name,
                           style: const TextStyle(
                             color: Colors.black,
                           )),
@@ -87,9 +104,11 @@ class DormCardState extends State<DormCard> {
                             size: 20,
                           ),
                           Text(
-                            dormController.dorms[index].rating == 0.0
+                            dormController.filteredDorms[index].rating == 0.0
                                 ? 'N/A'
-                                : dormController.dorms[index].rating
+                                : dormController
+                                    .getFilteredDorms()[index]
+                                    .rating
                                     .toStringAsFixed(1),
                             style: const TextStyle(
                               color: Colors.black,
@@ -108,8 +127,8 @@ class DormCardState extends State<DormCard> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => DormInfoPage(
-                                dorm: dormController.dorms[index],
-                                dormId: dormController.dorms[index].id,
+                                dorm: dormController.filteredDorms[index],
+                                dormId: dormController.filteredDorms[index].id,
                               ),
                             ),
                           );
@@ -123,7 +142,7 @@ class DormCardState extends State<DormCard> {
                         ),
                       ),
                       IconButton(
-                        icon: dormController.dorms[index].isFavorite
+                        icon: dormController.filteredDorms[index].isFavorite
                             ? const Icon(Icons.favorite, color: Colors.red)
                             : const Icon(Icons.favorite_border),
                         onPressed: () {

@@ -7,12 +7,22 @@ import 'package:dormdee/utilities/error_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'dart:async';
 
 class DormController extends GetxController {
   static DormController get instance => Get.find();
+  final _filteredDormsController =
+      StreamController<List<DormModel>>.broadcast();
+  Stream<List<DormModel>> get filteredDormsStream =>
+      _filteredDormsController.stream;
 
   void toggleFavorite(int index) {
     dorms[index].isFavorite = !dorms[index].isFavorite;
+    update();
+  }
+
+  void updateFilteredDorms(List<DormModel> newDorms) {
+    _filteredDormsController.add(newDorms);
     update();
   }
 
@@ -28,11 +38,27 @@ class DormController extends GetxController {
   TextEditingController category = TextEditingController();
   TextEditingController contact = TextEditingController();
   RxList<DormModel> topRatedDorms = <DormModel>[].obs;
-
+  RxList<DormModel> filteredDorms = <DormModel>[].obs;
   @override
   void onInit() {
     fetchDorms();
     super.onInit();
+  }
+
+  void filterDorms(String category) {
+    if (category == 'All') {
+      this.filteredDorms = RxList<DormModel>.from(dorms);
+    } else {
+      this.filteredDorms = RxList<DormModel>.from(
+        dorms.where((dorm) => dorm.category == category).toList(),
+      );
+    }
+
+    update();
+  }
+
+  RxList<DormModel> getFilteredDorms() {
+    return RxList<DormModel>.from(filteredDorms);
   }
 
   Future<void> fetchDorms() async {
@@ -69,8 +95,10 @@ class DormController extends GetxController {
   Future<List<DormModel>> getDorms() async {
     try {
       final snapshot = await fs.collection("dorms").get();
+      print('Snapshot docs: ${snapshot.docs}');
       final list =
           snapshot.docs.map((docs) => DormModel.fromSnapshot(docs)).toList();
+      print('List: $list');
       return list;
     } on FirebaseException catch (e) {
       showErrorSnackbar("Error", e.message.toString());

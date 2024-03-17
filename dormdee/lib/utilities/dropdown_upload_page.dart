@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:dormdee/controllers/dorm_controller.dart';
 
-class DropDownMenu extends StatefulWidget {
-  const DropDownMenu({Key? key}) : super(key: key);
+class DropDownUpload extends StatefulWidget {
+  const DropDownUpload({Key? key}) : super(key: key);
 
   @override
-  State<DropDownMenu> createState() => _DropDownMenuState();
+  State<DropDownUpload> createState() => _DropDownUploadState();
 }
 
-class _DropDownMenuState extends State<DropDownMenu> {
+class _DropDownUploadState extends State<DropDownUpload> {
   String dropdownValue = 'Lung Mor';
-  final dormController = DormController.instance;
   @override
   Widget build(BuildContext context) {
     return DropdownButton<String>(
@@ -30,14 +28,12 @@ class _DropDownMenuState extends State<DropDownMenu> {
         });
       },
       items: [
-        ...<String>{'All', 'Lung Mor', 'Kangsadan', 'Non Muang'}
+        ...<String>{'Lung Mor', 'Kangsadan', 'Non Muang'}
       ].map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem<String>(
           value: value,
           child: Text(value),
-          onTap: () {
-            dormController.filterDorms(value);
-          },
+          onTap: () {},
         );
       }).toList(),
     );
