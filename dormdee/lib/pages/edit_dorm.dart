@@ -1,18 +1,38 @@
 import 'package:dormdee/controllers/dorm_controller.dart';
 import 'package:dormdee/utilities/dorpdown_menu.dart';
-import 'package:dormdee/utilities/text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class UploadDorm extends StatelessWidget {
-  const UploadDorm({Key? key}) : super(key: key);
+import '../utilities/text_field.dart';
 
+class EditDorm extends StatefulWidget {
+  const EditDorm({
+    super.key,
+    required this.dormName,
+    required this.dormAddress,
+    required this.dormInformation,
+    required this.dormPrice,
+    required this.dormImageUrl,
+    required this.dormCategory,
+  });
+  final String dormName;
+  final String dormAddress;
+  final String dormInformation;
+  final String dormPrice;
+  final String dormImageUrl;
+  final String dormCategory;
+
+  @override
+  State<EditDorm> createState() => _EditDormState();
+}
+
+class _EditDormState extends State<EditDorm> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("Upload Dormitory"),
+          title: const Text("Edit Dormitory"),
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -42,7 +62,7 @@ class UploadDorm extends StatelessWidget {
                         )
                       : ClipOval(
                           child: Image.network(
-                            DormController.instance.imageUrlRx.value,
+                            widget.dormImageUrl,
                             fit: BoxFit.fill,
                             width: 200,
                             height: 200,
@@ -54,24 +74,27 @@ class UploadDorm extends StatelessWidget {
                 height: 20,
               ),
               AppTextField(
-                  controller: DormController.instance.name, title: "Dorm Name"),
+                  controller: TextEditingController(text: widget.dormName),
+                  title: "Dorm Name"),
               const SizedBox(
                 height: 20,
               ),
               AppTextField(
-                  controller: DormController.instance.address,
+                  controller: TextEditingController(text: widget.dormAddress),
                   title: "Address"),
               const SizedBox(
                 height: 20,
               ),
               AppTextField(
-                  controller: DormController.instance.information,
+                  controller:
+                      TextEditingController(text: widget.dormInformation),
                   title: "Information"),
               const SizedBox(
                 height: 20,
               ),
               AppTextField(
-                  controller: DormController.instance.price, title: "Price"),
+                  controller: TextEditingController(text: widget.dormPrice),
+                  title: "Price"),
               const SizedBox(
                 height: 20,
               ),

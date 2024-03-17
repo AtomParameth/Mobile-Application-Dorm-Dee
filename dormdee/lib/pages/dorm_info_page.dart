@@ -1,11 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dormdee/controllers/dorm_controller.dart';
 import 'package:dormdee/models/rating_model.dart';
+import 'package:dormdee/pages/edit_dorm.dart';
+import 'package:dormdee/utilities/image_slider_dormInfo.dart';
 import 'package:dormdee/utilities/rating_bart.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:dormdee/models/dorm_model.dart';
-import 'package:dormdee/utilities/image_slider.dart';
 import 'package:get/get.dart';
 
 class DormInfoPage extends StatefulWidget {
@@ -26,7 +27,6 @@ class _DormInfoPageState extends State<DormInfoPage> {
   final currentUser = FirebaseAuth.instance.currentUser;
 
   void handleRatingChange(int newRating) {
-    // Optionally update your state or display the new rating here
     rating = newRating;
     print('Updated rating: $newRating');
   }
@@ -43,6 +43,23 @@ class _DormInfoPageState extends State<DormInfoPage> {
       appBar: AppBar(
         title: Text(widget.dorm.name),
         actions: [
+          IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => EditDorm(
+                      dormName: widget.dorm.name,
+                      dormAddress: widget.dorm.address,
+                      dormInformation: widget.dorm.information,
+                      dormPrice: widget.dorm.price,
+                      dormImageUrl: widget.dorm.imageUrl,
+                      dormCategory: widget.dorm.category,
+                    ),
+                  ),
+                );
+              },
+              icon: const Icon(Icons.edit)),
           IconButton(
               onPressed: () {
                 showDialog(
@@ -117,9 +134,7 @@ class _DormInfoPageState extends State<DormInfoPage> {
             const SizedBox(
               height: 20,
             ),
-            ImageSlider(
-              imageUrl: widget.dorm.imageUrl,
-            ),
+            ImageSliderDormInfo(imageUrl: widget.dorm.imageUrl),
             const SizedBox(
               height: 20,
             ),

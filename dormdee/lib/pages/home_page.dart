@@ -93,10 +93,10 @@ class _HomePageState extends State<HomePage> {
     return SingleChildScrollView(
       child: Container(
         padding: const EdgeInsets.only(bottom: kBottomNavigationBarHeight),
-        child: Column(
+        child: const Column(
           children: [
-            const SizedBox(height: 20),
-            const Row(
+            SizedBox(height: 20),
+            Row(
               children: [
                 SizedBox(width: 40),
                 Text(
@@ -105,26 +105,13 @@ class _HomePageState extends State<HomePage> {
                 ),
               ],
             ),
-            const SizedBox(height: 20),
-            Obx(() {
-              if (DormController.instance.topRatedDorms.isNotEmpty) {
-                return Column(
-                    children: DormController.instance.topRatedDorms
-                        .map((dorm) => Text(dorm.name))
-                        .toList());
-              } else {
-                return const Text("No top rated dorms");
-              }
-            }),
-            const ImageSlider(
-              imageUrl:
-                  "https://studocu.com/blog/wp-content/uploads/2020/09/slovenia.jpg",
-            ),
-            const Row(
+            SizedBox(height: 20),
+            ImageSlider(),
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [DropDownMenu(), DropDownMenu(), DropDownMenu()],
             ),
-            const DormCard(),
+            DormCard(),
           ],
         ),
       ),

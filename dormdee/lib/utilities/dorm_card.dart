@@ -87,7 +87,10 @@ class DormCardState extends State<DormCard> {
                             size: 20,
                           ),
                           Text(
-                            '(${dormController.dorms[index].rating.toStringAsFixed(1)})',
+                            dormController.dorms[index].rating == 0.0
+                                ? 'N/A'
+                                : dormController.dorms[index].rating
+                                    .toStringAsFixed(1),
                             style: const TextStyle(
                               color: Colors.black,
                             ),
