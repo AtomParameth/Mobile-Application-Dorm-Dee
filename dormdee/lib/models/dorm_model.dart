@@ -61,7 +61,26 @@ class DormModel {
       "id": id,
     };
   }
-
+  factory DormModel.fromMap(Map<String, dynamic> data) {
+    var ratingList = data["ratings"] as List?;
+    List<RatingModel> ratings = ratingList != null
+        ? ratingList.map((i) => RatingModel.fromMap(i)).toList()
+        : [];
+    return DormModel(
+      name: data["name"] ?? "",
+      address: data["address"] ?? "",
+      information: data["information"] ?? "",
+      price: data["price"] ?? "",
+      imageUrl: data["imageUrl"] ?? "",
+      rating: (data["rating"] ?? 0).toDouble(),
+      category: data["category"] ?? "",
+      contact: data["contact"] ?? "",
+      createdAt: (data["createdAt"] as Timestamp?)?.toDate() ?? DateTime.now(),
+      id: data["id"] ?? "",
+      ratings: ratings,
+    );
+  }
+  
   factory DormModel.fromSnapshot(
       DocumentSnapshot<Map<String, dynamic>> document) {
     if (document.data() == null) {

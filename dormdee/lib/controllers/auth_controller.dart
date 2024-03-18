@@ -15,6 +15,7 @@ class AuthController extends GetxController {
   TextEditingController confirmPasswordController = TextEditingController();
   TextEditingController phoneNumberController = TextEditingController();
   TextEditingController userNameController = TextEditingController();
+  
   RxBool hidePassword = true.obs;
 
   void signUp() async {
@@ -103,6 +104,7 @@ class AuthController extends GetxController {
         email: user.email ?? "",
         phoneNumber: user.phoneNumber ?? "",
         profilePicture: user.photoURL ?? "",
+        favdorm: [],
       );
       await FirebaseFirestore.instance
           .collection("users")
@@ -119,6 +121,7 @@ class AuthController extends GetxController {
       phoneNumber: phoneNumber,
       userName: userName,
       profilePicture: "",
+      favdorm: [],
     );
     FirebaseFirestore.instance
         .collection("users")

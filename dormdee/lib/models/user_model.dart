@@ -6,6 +6,7 @@ class UserModel {
   final String email;
   final String phoneNumber;
   final String profilePicture;
+  final List<String> favdorm;
 
   UserModel({
     required this.id,
@@ -13,6 +14,7 @@ class UserModel {
     required this.email,
     required this.phoneNumber,
     required this.profilePicture,
+    required this.favdorm,
   });
 
   static UserModel empty() {
@@ -22,6 +24,7 @@ class UserModel {
       email: "",
       phoneNumber: "",
       profilePicture: "",
+      favdorm: [],
     );
   }
 
@@ -32,9 +35,21 @@ class UserModel {
       "email": email,
       "phoneNumber": phoneNumber,
       "profilePicture": profilePicture,
+      "favdorm": favdorm,
     };
   }
 
+  factory UserModel.fromMap(Map<String, dynamic> map) {
+    return UserModel(
+      id: map['id'],
+      userName: map['userName'],
+      email: map['email'],
+      phoneNumber: map['phoneNumber'],
+      profilePicture: map['profilePicture'],
+      favdorm: List<String>.from(map['favdorm'] ?? []),
+    );
+  }
+  
   factory UserModel.fromSnapshot(
       DocumentSnapshot<Map<String, dynamic>> document) {
     if (document.data() == null) {
@@ -47,7 +62,9 @@ class UserModel {
         email: data["email"] ?? "",
         phoneNumber: data["phoneNumber"] ?? "",
         profilePicture: data["profilePicture"] ?? "",
+        favdorm: List<String>.from(data["favdorm"] ?? []),
       );
     }
+    
   }
 }

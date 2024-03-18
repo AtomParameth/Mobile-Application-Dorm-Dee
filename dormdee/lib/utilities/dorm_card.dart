@@ -152,9 +152,13 @@ class DormCardState extends State<DormCard> {
                           if (dormController.filteredDorms[index].isFavorite) {
                             dormController.addFavoriteDorm(
                                 FirebaseAuth.instance.currentUser!.uid, index);
+                            dormController.getFavoriteDorms(
+                                FirebaseAuth.instance.currentUser!.uid);
+                            dormController.loadFavDorm();
                           } else {
                             dormController.deleteFavoriteDorm(
                                 FirebaseAuth.instance.currentUser!.uid, index);
+                            dormController.loadFavDorm();
                           }
                         },
                       ),

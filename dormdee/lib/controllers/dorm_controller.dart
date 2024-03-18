@@ -2,8 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dormdee/firebase_service/firebase_storage_service.dart';
 import 'package:dormdee/models/dorm_model.dart';
 import 'package:dormdee/models/rating_model.dart';
+import 'package:dormdee/models/user_model.dart';
 import 'package:dormdee/pages/home_page.dart';
 import 'package:dormdee/utilities/error_snackbar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -16,6 +18,21 @@ class DormController extends GetxController {
   Stream<List<DormModel>> get filteredDormsStream =>
       _filteredDormsController.stream;
 
+  final fs = FirebaseFirestore.instance;
+  RxList<DormModel> dorms = <DormModel>[].obs;
+  RxList<RatingModel> ratingsRx = <RatingModel>[].obs;
+  TextEditingController name = TextEditingController();
+  TextEditingController address = TextEditingController();
+  TextEditingController information = TextEditingController();
+  TextEditingController price = TextEditingController();
+  String imageUrl = "";
+  RxString imageUrlRx = "".obs;
+  TextEditingController category = TextEditingController();
+  TextEditingController contact = TextEditingController();
+  RxList<DormModel> topRatedDorms = <DormModel>[].obs;
+  RxList<DormModel> filteredDorms = <DormModel>[].obs;
+  RxList<DormModel> favoriteDorms = <DormModel>[].obs;
+  RxList<String> favoriteDormIds = <String>[].obs;
   void toggleFavorite(int index) {
     dorms[index].isFavorite = !dorms[index].isFavorite;
     update();
@@ -24,6 +41,12 @@ class DormController extends GetxController {
   void updateFilteredDorms(List<DormModel> newDorms) {
     filteredDorms.assignAll(newDorms);
   }
+
+  void updateFavoriteDorms(List<DormModel> newDorms) {
+    favoriteDorms.assignAll(newDorms);
+  }
+
+
 
   Future<void> deleteFavoriteDorm(String documentId, int index) async {
     try {
@@ -57,35 +80,18 @@ class DormController extends GetxController {
         "favdorm": FieldValue.arrayUnion([dorms[index].id]),
       });
 
-      // เพิ่มข้อมูล dorm เข้าไปใน collection
-      await _firestore.collection('favdorm').add({
-        'id': dorms[index].id,
-      });
-
       print('Favorite dorm added successfully');
     } catch (e) {
       print('Error adding favorite dorm: $e');
     }
   }
 
-  final fs = FirebaseFirestore.instance;
-  RxList<DormModel> dorms = <DormModel>[].obs;
-  RxList<RatingModel> ratingsRx = <RatingModel>[].obs;
-  TextEditingController name = TextEditingController();
-  TextEditingController address = TextEditingController();
-  TextEditingController information = TextEditingController();
-  TextEditingController price = TextEditingController();
-  String imageUrl = "";
-  RxString imageUrlRx = "".obs;
-  TextEditingController category = TextEditingController();
-  TextEditingController contact = TextEditingController();
-  RxList<DormModel> topRatedDorms = <DormModel>[].obs;
-  RxList<DormModel> filteredDorms = <DormModel>[].obs;
   @override
   void onInit() {
     fetchDorms().then((_) => filterDorms("All"));
     super.onInit();
     filterDorms('All');
+    loadFavDorm();
   }
 
   void filterDorms(String category) {
@@ -133,16 +139,40 @@ class DormController extends GetxController {
     });
   }
 
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  Future<void> loadFavDorm() async {
+    try {
+      String userId = _auth.currentUser!.uid;
+      DocumentSnapshot userDoc = await _firestore.collection('users').doc(userId).get();
+      List<String> favDormIds = List<String>.from(userDoc.get('favdorm'));
+
+      List<Future<DormModel>> futureDorms = favDormIds.map((dormId) {
+        return _firestore.collection('dorms').doc(dormId).get().then((doc) {
+          return DormModel.fromMap(doc.data()!); // Assuming you have a fromMap method in DormModel
+        });
+      }).toList();
+
+      List<DormModel> loadedDorms = await Future.wait(futureDorms);
+
+      favoriteDormIds.assignAll(favDormIds);
+      favoriteDorms.assignAll(loadedDorms);
+      
+    } catch (error) {
+      print('Error loading favorite dorms: $error');
+    }
+  }
+
+
   Future<List<DormModel>> getDorms() async {
     try {
       final snapshot = await fs
           .collection("dorms")
           .orderBy("createdAt", descending: false)
           .get();
-      print('Snapshot docs: ${snapshot.docs}');
+
       final list =
           snapshot.docs.map((docs) => DormModel.fromSnapshot(docs)).toList();
-      print('List: $list');
+
       return list;
     } on FirebaseException catch (e) {
       showErrorSnackbar("Error", e.message.toString());
@@ -165,6 +195,33 @@ class DormController extends GetxController {
       Get.back();
     } on FirebaseException catch (e) {
       showErrorSnackbar("Error", e.message.toString());
+    }
+  }
+
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  Future<List<dynamic>> getFavoriteDorms(String userId) async {
+    try {
+      // เรียกข้อมูลจาก Document ของ user ด้วย ID ของผู้ใช้
+      DocumentSnapshot userDoc =
+          await _firestore.collection('users').doc(userId).get();
+
+      // ถ้ามี Document ของผู้ใช้อยู่จริง
+      if (userDoc.exists) {
+        // ดึงข้อมูล favdorm ออกมาจาก Document
+        List<dynamic> favDorm = userDoc.get('favdorm');
+
+        print('Favorite dorms retrieved successfully $favDorm');
+        return favDorm;
+      } else {
+        // ถ้าไม่พบ Document ของผู้ใช้ หรือไม่มีข้อมูล favdorm
+        print(
+            'Document for user $userId does not exist or favdorm data is missing');
+        return [];
+      }
+    } catch (e) {
+      print('Error getting favorite dorms: $e');
+      return [];
     }
   }
 
