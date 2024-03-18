@@ -29,12 +29,17 @@ class _DormInfoPageState extends State<DormInfoPage> {
 
   void handleRatingChange(int newRating) {
     rating = newRating;
-    print('Updated rating: $newRating');
   }
 
-  void checkRatedDorm() {
-    hasRated.value = widget.dorm.ratings
-        .any((element) => element.userId == currentUser!.uid);
+  void checkRatedDorm() async {
+    DocumentSnapshot dormDoc = await FirebaseFirestore.instance
+        .collection('dorms')
+        .doc(widget.dormId)
+        .get();
+    DormModel dorm = DormModel.fromSnapshot(
+        dormDoc as DocumentSnapshot<Map<String, dynamic>>);
+    hasRated.value =
+        dorm.ratings.any((element) => element.userId == currentUser!.uid);
   }
 
   @override
@@ -69,6 +74,7 @@ class _DormInfoPageState extends State<DormInfoPage> {
                       dormImageUrl: widget.dorm.imageUrl,
                       dormCategory: widget.dorm.category,
                       dormId: widget.dormId,
+                      dormContact: widget.dorm.contact,
                     ),
                   ),
                 );
@@ -129,6 +135,7 @@ class _DormInfoPageState extends State<DormInfoPage> {
                                         .rateDorm(widget.dormId, ratedDorm);
                                     descriptionController.clear();
                                     handleRatingChange(0);
+
                                     checkRatedDorm();
                                   },
                                   child: const Text("Submit")),
@@ -145,131 +152,163 @@ class _DormInfoPageState extends State<DormInfoPage> {
         ],
       ),
       body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(
-              height: 20,
-            ),
-            ImageSliderDormInfo(imageUrl: widget.dorm.imageUrl),
-            const SizedBox(
-              height: 20,
-            ),
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 40),
-              child: Card(
-                color: Colors.white70,
-                surfaceTintColor: Colors.white,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      "Information",
-                      style:
-                          TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Text(widget.dorm.information),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 40),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    "Price",
-                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
-                  ),
-                  Text('Month: ${widget.dorm.price} Baht'),
-                  const Text(
-                    "Rating",
-                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
-                  ),
-                  Text(widget.dorm.rating.toStringAsFixed(1)),
-                  const Text(
-                    "Zone",
-                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
-                  ),
-                  Text(widget.dorm.category),
-                  const Text(
-                    "Contact",
-                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
-                  ),
-                  Text(widget.dorm.contact),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  const Text(
-                    "Comments",
-                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
-                  ),
-                  Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 0, vertical: 10),
-                      child: StreamBuilder<DormModel>(
-                        stream: widget.dormController.streamDorm(widget.dormId),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const CircularProgressIndicator();
-                          } else if (snapshot.hasError) {
-                            return Text('Error: ${snapshot.error}');
-                          } else {
-                            DormModel dorm = snapshot.data!;
-                            return Column(
-                              children: List.generate(
-                                dorm.ratings.length,
-                                (index) => Row(
-                                  children: [
-                                    dorm.ratings[index].userImage != ""
-                                        ? CircleAvatar(
-                                            backgroundImage: NetworkImage(
-                                                dorm.ratings[index].userImage),
-                                          )
-                                        : const CircleAvatar(
-                                            child: Icon(Icons.person),
-                                          ),
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 0, vertical: 10),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(dorm.ratings[index].user),
-                                          Text(dorm.ratings[index].description),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
+          child: StreamBuilder<DocumentSnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection("dorms")
+                  .doc(widget.dormId)
+                  .snapshots(),
+              builder: (BuildContext context,
+                  AsyncSnapshot<DocumentSnapshot> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (snapshot.hasError) {
+                  return const Center(
+                    child: Text("Error"),
+                  );
+                } else {
+                  Map<String, dynamic> data =
+                      snapshot.data!.data() as Map<String, dynamic>;
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      ImageSliderDormInfo(imageUrl: data['imageUrl']),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 40),
+                        child: Card(
+                          color: Colors.white70,
+                          surfaceTintColor: Colors.white,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                "Information",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w500, fontSize: 18),
                               ),
-                            );
-                          }
-                        },
-                      )),
-                  const SizedBox(
-                    height: 10,
-                  )
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Text(data["information"]),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 40),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "Price",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500, fontSize: 18),
+                            ),
+                            Text('Month: ${data["price"]} Baht'),
+                            const Text(
+                              "Rating",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500, fontSize: 18),
+                            ),
+                            Text(data["rating"].toStringAsFixed(1)),
+                            const Text(
+                              "Zone",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500, fontSize: 18),
+                            ),
+                            Text(data["category"]),
+                            const Text(
+                              "Contact",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500, fontSize: 18),
+                            ),
+                            Text(data["contact"]),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            const Text(
+                              "Comments",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500, fontSize: 18),
+                            ),
+                            Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 0, vertical: 10),
+                                child: StreamBuilder<DormModel>(
+                                  stream: widget.dormController
+                                      .streamDorm(widget.dormId),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return const CircularProgressIndicator();
+                                    } else if (snapshot.hasError) {
+                                      return Text('Error: ${snapshot.error}');
+                                    } else {
+                                      DormModel dorm = snapshot.data!;
+                                      return Column(
+                                        children: List.generate(
+                                          dorm.ratings.length,
+                                          (index) => Row(
+                                            children: [
+                                              dorm.ratings[index].userImage !=
+                                                      ""
+                                                  ? CircleAvatar(
+                                                      backgroundImage:
+                                                          NetworkImage(dorm
+                                                              .ratings[index]
+                                                              .userImage),
+                                                    )
+                                                  : const CircleAvatar(
+                                                      child: Icon(Icons.person),
+                                                    ),
+                                              const SizedBox(
+                                                width: 10,
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 0,
+                                                        vertical: 10),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(dorm
+                                                        .ratings[index].user),
+                                                    Text(dorm.ratings[index]
+                                                        .description),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  },
+                                )),
+                            const SizedBox(
+                              height: 10,
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
+                  );
+                }
+              })),
     ));
   }
 }

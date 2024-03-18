@@ -1,6 +1,7 @@
 import 'package:dormdee/controllers/dorm_controller.dart';
 import 'package:dormdee/pages/dorm_info_page.dart';
 import 'package:dormdee/utilities/dorpdown_menu.dart';
+import 'package:dormdee/utilities/dropdown_upload_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -16,6 +17,7 @@ class EditDorm extends StatefulWidget {
     required this.dormImageUrl,
     required this.dormCategory,
     required this.dormId,
+    required this.dormContact,
   });
   final String dormName;
   final String dormAddress;
@@ -24,6 +26,7 @@ class EditDorm extends StatefulWidget {
   final String dormImageUrl;
   final String dormCategory;
   final String dormId;
+  final String dormContact;
 
   @override
   State<EditDorm> createState() => _EditDormState();
@@ -38,6 +41,7 @@ class _EditDormState extends State<EditDorm> {
     DormController.instance.information.text = widget.dormInformation;
     DormController.instance.price.text = widget.dormPrice;
     DormController.instance.category.text = widget.dormCategory;
+    DormController.instance.contact.text = widget.dormContact;
     super.initState();
   }
 
@@ -76,7 +80,7 @@ class _EditDormState extends State<EditDorm> {
                         )
                       : ClipOval(
                           child: Image.network(
-                            widget.dormImageUrl,
+                            DormController.instance.imageUrlRx.value,
                             fit: BoxFit.fill,
                             width: 200,
                             height: 200,
@@ -109,7 +113,11 @@ class _EditDormState extends State<EditDorm> {
               const SizedBox(
                 height: 20,
               ),
-              const DropDownMenu(),
+              AppTextField(
+                  controller: DormController.instance.contact,
+                  title: "Contact"),
+              const SizedBox(height: 20),
+              const DropDownUpload(),
               const SizedBox(
                 height: 50,
               ),

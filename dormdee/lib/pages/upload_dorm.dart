@@ -72,6 +72,10 @@ class UploadDorm extends StatelessWidget {
               ),
               AppTextField(
                   controller: DormController.instance.price, title: "Price"),
+              const SizedBox(height: 20),
+              AppTextField(
+                  controller: DormController.instance.contact,
+                  title: "Contact"),
               const SizedBox(
                 height: 20,
               ),

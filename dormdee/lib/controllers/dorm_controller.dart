@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dormdee/firebase_service/firebase_storage_service.dart';
 import 'package:dormdee/models/dorm_model.dart';
 import 'package:dormdee/models/rating_model.dart';
-import 'package:dormdee/models/user_model.dart';
 import 'package:dormdee/pages/home_page.dart';
 import 'package:dormdee/utilities/error_snackbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -19,6 +18,7 @@ class DormController extends GetxController {
       _filteredDormsController.stream;
 
   final fs = FirebaseFirestore.instance;
+  RxBool dormLoading = false.obs;
   RxList<DormModel> dorms = <DormModel>[].obs;
   RxList<RatingModel> ratingsRx = <RatingModel>[].obs;
   TextEditingController name = TextEditingController();
@@ -46,8 +46,6 @@ class DormController extends GetxController {
     favoriteDorms.assignAll(newDorms);
   }
 
-
-
   Future<void> deleteFavoriteDorm(String documentId, int index) async {
     try {
       // ระบุ collection ที่เก็บข้อมูล favorite dorms
@@ -64,10 +62,8 @@ class DormController extends GetxController {
           .where('id', isEqualTo: dorms[index].id)
           .get();
       querySnapshot.docs[0].reference.delete();
-
-      print('Favorite dorm deleted successfully');
     } catch (e) {
-      print('Error deleting favorite dorm: $e');
+      debugPrint('Error deleting favorite dorm: $e');
     }
   }
 
@@ -110,6 +106,7 @@ class DormController extends GetxController {
 
   Future<void> fetchDorms() async {
     try {
+      dormLoading.value = true;
       final dorm = await getDorms();
       dorms.assignAll(dorm);
       final topRated = dorm.toList()
@@ -117,6 +114,8 @@ class DormController extends GetxController {
       topRatedDorms.assignAll(topRated.take(5));
     } on FirebaseException catch (e) {
       showErrorSnackbar("Error", e.message.toString());
+    } finally {
+      dormLoading.value = false;
     }
   }
 
@@ -143,12 +142,14 @@ class DormController extends GetxController {
   Future<void> loadFavDorm() async {
     try {
       String userId = _auth.currentUser!.uid;
-      DocumentSnapshot userDoc = await _firestore.collection('users').doc(userId).get();
+      DocumentSnapshot userDoc =
+          await _firestore.collection('users').doc(userId).get();
       List<String> favDormIds = List<String>.from(userDoc.get('favdorm'));
 
       List<Future<DormModel>> futureDorms = favDormIds.map((dormId) {
         return _firestore.collection('dorms').doc(dormId).get().then((doc) {
-          return DormModel.fromMap(doc.data()!); // Assuming you have a fromMap method in DormModel
+          return DormModel.fromMap(
+              doc.data()!); // Assuming you have a fromMap method in DormModel
         });
       }).toList();
 
@@ -156,12 +157,10 @@ class DormController extends GetxController {
 
       favoriteDormIds.assignAll(favDormIds);
       favoriteDorms.assignAll(loadedDorms);
-      
     } catch (error) {
       print('Error loading favorite dorms: $error');
     }
   }
-
 
   Future<List<DormModel>> getDorms() async {
     try {
