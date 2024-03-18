@@ -9,7 +9,7 @@ class DropDownMenu extends StatefulWidget {
 }
 
 class _DropDownMenuState extends State<DropDownMenu> {
-  String dropdownValue = 'Lung Mor';
+  String dropdownValue = 'All';
   final dormController = DormController.instance;
   @override
   Widget build(BuildContext context) {

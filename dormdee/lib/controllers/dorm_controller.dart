@@ -22,8 +22,7 @@ class DormController extends GetxController {
   }
 
   void updateFilteredDorms(List<DormModel> newDorms) {
-    _filteredDormsController.add(newDorms);
-    update();
+    filteredDorms.assignAll(newDorms);
   }
 
   final fs = FirebaseFirestore.instance;
@@ -41,20 +40,19 @@ class DormController extends GetxController {
   RxList<DormModel> filteredDorms = <DormModel>[].obs;
   @override
   void onInit() {
-    fetchDorms();
+    fetchDorms().then((_) => filterDorms("All"));
     super.onInit();
+    filterDorms('All');
   }
 
   void filterDorms(String category) {
     if (category == 'All') {
-      this.filteredDorms = RxList<DormModel>.from(dorms);
+      filteredDorms.assignAll(dorms);
     } else {
-      this.filteredDorms = RxList<DormModel>.from(
+      filteredDorms.assignAll(
         dorms.where((dorm) => dorm.category == category).toList(),
       );
     }
-
-    update();
   }
 
   RxList<DormModel> getFilteredDorms() {

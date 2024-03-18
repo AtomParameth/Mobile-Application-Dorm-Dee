@@ -15,6 +15,7 @@ class DormCardState extends State<DormCard> {
   final dormController = Get.put(DormController());
   late StreamSubscription _subscription;
 
+  @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {

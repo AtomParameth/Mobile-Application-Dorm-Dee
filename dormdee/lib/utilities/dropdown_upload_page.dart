@@ -1,3 +1,4 @@
+import 'package:dormdee/controllers/dorm_controller.dart';
 import 'package:flutter/material.dart';
 
 class DropDownUpload extends StatefulWidget {
@@ -24,7 +25,7 @@ class _DropDownUploadState extends State<DropDownUpload> {
       ),
       onChanged: (String? newValue) {
         setState(() {
-          dropdownValue = newValue!;
+          DormController.instance.category.text = newValue!;
         });
       },
       items: [

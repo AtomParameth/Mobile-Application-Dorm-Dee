@@ -28,6 +28,12 @@ class EditDorm extends StatefulWidget {
 
 class _EditDormState extends State<EditDorm> {
   @override
+  void initState() {
+    DormController.instance.imageUrlRx.value = widget.dormImageUrl;
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
