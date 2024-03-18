@@ -1,6 +1,4 @@
 import 'package:dormdee/controllers/dorm_controller.dart';
-import 'package:dormdee/pages/dorm_info_page.dart';
-import 'package:dormdee/utilities/dorpdown_menu.dart';
 import 'package:dormdee/utilities/dropdown_upload_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

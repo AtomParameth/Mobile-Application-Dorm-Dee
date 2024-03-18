@@ -16,6 +16,15 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   final authUser = FirebaseAuth.instance.currentUser;
   AuthController authController = Get.put(AuthController());
+
+  @override
+  void initState() {
+    if (authUser!.photoURL != null) {
+      authController.imageUrlRx.value = authUser!.photoURL!;
+    }
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,6 +80,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         Get.to(() => EditProfilePage(
                               userName: userData['userName'].toString(),
                               phoneNumber: userData['phoneNumber'].toString(),
+                              imageUrl: userData['profilePicture'].toString(),
                             ));
                       },
                       child: const Row(
