@@ -92,7 +92,10 @@ class DormController extends GetxController {
 
   Future<List<DormModel>> getDorms() async {
     try {
-      final snapshot = await fs.collection("dorms").get();
+      final snapshot = await fs
+          .collection("dorms")
+          .orderBy("createdAt", descending: false)
+          .get();
       print('Snapshot docs: ${snapshot.docs}');
       final list =
           snapshot.docs.map((docs) => DormModel.fromSnapshot(docs)).toList();
@@ -101,6 +104,24 @@ class DormController extends GetxController {
     } on FirebaseException catch (e) {
       showErrorSnackbar("Error", e.message.toString());
       return [];
+    }
+  }
+
+  void updateDormInfo(String dormId) async {
+    try {
+      await FirebaseFirestore.instance.collection("dorms").doc(dormId).update({
+        "name": name.text.trim(),
+        "address": address.text.trim(),
+        "information": information.text.trim(),
+        "price": price.text.trim(),
+        "category": category.text.trim(),
+        "contact": contact.text.trim(),
+        "imageUrl": imageUrlRx.value,
+      });
+      clearTextField();
+      Get.back();
+    } on FirebaseException catch (e) {
+      showErrorSnackbar("Error", e.message.toString());
     }
   }
 
@@ -188,5 +209,16 @@ class DormController extends GetxController {
       imageUrlRx.value = url;
       return imageUrl;
     }
+  }
+
+  void clearTextField() {
+    name.clear();
+    address.clear();
+    information.clear();
+    price.clear();
+    imageUrl = "";
+    imageUrlRx.value = "";
+    category.clear();
+    contact.clear();
   }
 }

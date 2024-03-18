@@ -22,6 +22,7 @@ class DormInfoPage extends StatefulWidget {
 }
 
 class _DormInfoPageState extends State<DormInfoPage> {
+  RxBool hasRated = false.obs;
   int rating = 0;
   TextEditingController descriptionController = TextEditingController();
   final currentUser = FirebaseAuth.instance.currentUser;
@@ -31,8 +32,14 @@ class _DormInfoPageState extends State<DormInfoPage> {
     print('Updated rating: $newRating');
   }
 
+  void checkRatedDorm() {
+    hasRated.value = widget.dorm.ratings
+        .any((element) => element.userId == currentUser!.uid);
+  }
+
   @override
   void initState() {
+    checkRatedDorm();
     super.initState();
   }
 
@@ -61,76 +68,80 @@ class _DormInfoPageState extends State<DormInfoPage> {
                       dormPrice: widget.dorm.price,
                       dormImageUrl: widget.dorm.imageUrl,
                       dormCategory: widget.dorm.category,
+                      dormId: widget.dormId,
                     ),
                   ),
                 );
               },
               icon: const Icon(Icons.edit)),
-          IconButton(
-              onPressed: () {
-                showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text(
-                          'How many stars would you like to give to ${widget.dorm.name}?',
-                          style: const TextStyle(fontSize: 15),
-                        ),
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            RatingBarApp(
-                              ratingScore: rating,
-                              onRatingChanged: handleRatingChange,
+          Obx(() => hasRated.value
+              ? const Text("Rated")
+              : IconButton(
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text(
+                              'How many stars would you like to give to ${widget.dorm.name}?',
+                              style: const TextStyle(fontSize: 15),
                             ),
-                            const SizedBox(
-                              height: 10,
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                RatingBarApp(
+                                  ratingScore: rating,
+                                  onRatingChanged: handleRatingChange,
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                TextFormField(
+                                  controller: descriptionController,
+                                  decoration: const InputDecoration(
+                                      contentPadding: EdgeInsets.all(30),
+                                      hintText: 'Description...',
+                                      border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(20)))),
+                                ),
+                              ],
                             ),
-                            TextFormField(
-                              controller: descriptionController,
-                              decoration: const InputDecoration(
-                                  contentPadding: EdgeInsets.all(30),
-                                  hintText: 'Description...',
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(20)))),
-                            ),
-                          ],
-                        ),
-                        actions: [
-                          TextButton(
-                              onPressed: () async {
-                                Navigator.of(context).pop();
-                                DocumentSnapshot userDoc =
-                                    await FirebaseFirestore.instance
-                                        .collection('users')
-                                        .doc(currentUser!.uid)
-                                        .get();
+                            actions: [
+                              TextButton(
+                                  onPressed: () async {
+                                    Navigator.of(context).pop();
+                                    DocumentSnapshot userDoc =
+                                        await FirebaseFirestore.instance
+                                            .collection('users')
+                                            .doc(currentUser!.uid)
+                                            .get();
 
-                                final ratedDorm = RatingModel(
-                                  rating: rating,
-                                  description: descriptionController.text,
-                                  userImage: userDoc.get("profilePicture"),
-                                  user: userDoc.get("userName"),
-                                  userId: currentUser!.uid,
-                                  createdAt: DateTime.now(),
-                                );
-                                DormController.instance
-                                    .rateDorm(widget.dormId, ratedDorm);
-                                descriptionController.clear();
-                                handleRatingChange(0);
-                              },
-                              child: const Text("Submit")),
-                          TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: const Text("Cancel"))
-                        ],
-                      );
-                    });
-              },
-              icon: const Icon(Icons.star_border))
+                                    final ratedDorm = RatingModel(
+                                      rating: rating,
+                                      description: descriptionController.text,
+                                      userImage: userDoc.get("profilePicture"),
+                                      user: userDoc.get("userName"),
+                                      userId: currentUser!.uid,
+                                      createdAt: DateTime.now(),
+                                    );
+                                    await DormController.instance
+                                        .rateDorm(widget.dormId, ratedDorm);
+                                    descriptionController.clear();
+                                    handleRatingChange(0);
+                                    checkRatedDorm();
+                                  },
+                                  child: const Text("Submit")),
+                              TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text("Cancel"))
+                            ],
+                          );
+                        });
+                  },
+                  icon: const Icon(Icons.star_border)))
         ],
       ),
       body: SingleChildScrollView(
