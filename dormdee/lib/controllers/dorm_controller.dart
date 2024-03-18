@@ -25,6 +25,49 @@ class DormController extends GetxController {
     filteredDorms.assignAll(newDorms);
   }
 
+  Future<void> deleteFavoriteDorm(String documentId, int index) async {
+    try {
+      // ระบุ collection ที่เก็บข้อมูล favorite dorms
+      FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+      // ลบ dorm ที่ระบุออกจากรายการโปรด
+      await _firestore.collection('users').doc(documentId).update({
+        "favdorm": FieldValue.arrayRemove([dorms[index].id]),
+      });
+
+      // ลบข้อมูล dorm ออกจาก collection
+      QuerySnapshot querySnapshot = await _firestore
+          .collection('favdorm')
+          .where('id', isEqualTo: dorms[index].id)
+          .get();
+      querySnapshot.docs[0].reference.delete();
+
+      print('Favorite dorm deleted successfully');
+    } catch (e) {
+      print('Error deleting favorite dorm: $e');
+    }
+  }
+
+  Future<void> addFavoriteDorm(documentId, int index) async {
+    try {
+      // ระบุ collection ที่เก็บข้อมูล favorite dorms
+      FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+      await _firestore.collection('users').doc(documentId).update({
+        "favdorm": FieldValue.arrayUnion([dorms[index].id]),
+      });
+
+      // เพิ่มข้อมูล dorm เข้าไปใน collection
+      await _firestore.collection('favdorm').add({
+        'id': dorms[index].id,
+      });
+
+      print('Favorite dorm added successfully');
+    } catch (e) {
+      print('Error adding favorite dorm: $e');
+    }
+  }
+
   final fs = FirebaseFirestore.instance;
   RxList<DormModel> dorms = <DormModel>[].obs;
   RxList<RatingModel> ratingsRx = <RatingModel>[].obs;

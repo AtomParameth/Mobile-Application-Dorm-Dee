@@ -1,5 +1,6 @@
 import 'package:dormdee/controllers/dorm_controller.dart';
 import 'package:dormdee/pages/dorm_info_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'dart:async';
@@ -148,6 +149,13 @@ class DormCardState extends State<DormCard> {
                             : const Icon(Icons.favorite_border),
                         onPressed: () {
                           toggleFavorite(index);
+                          if (dormController.filteredDorms[index].isFavorite) {
+                            dormController.addFavoriteDorm(
+                                FirebaseAuth.instance.currentUser!.uid, index);
+                          } else {
+                            dormController.deleteFavoriteDorm(
+                                FirebaseAuth.instance.currentUser!.uid, index);
+                          }
                         },
                       ),
                     ],
