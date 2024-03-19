@@ -18,6 +18,7 @@ class _FavoritePageState extends State<FavoritePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 245, 245, 245),
       appBar: AppBar(
         title: const Text('Favorite Dorms'),
       ),
@@ -26,7 +27,6 @@ class _FavoritePageState extends State<FavoritePage> {
           DormController dormController = Get.find();
           List<String> favDorm = dormController.favoriteDormIds;
           List<DormModel> dorms = dormController.favoriteDorms;
-
           if (favDorm.isEmpty) {
             return const Center(
               child: Text(
@@ -43,12 +43,12 @@ class _FavoritePageState extends State<FavoritePage> {
                 if (favDorm.contains(dorm.id)) {
                   return Dismissible(
                     background: Container(
-                      color: Colors.red,
+                      color: const Color.fromARGB(255, 255, 98, 87),
                       alignment: Alignment.centerLeft,
                       padding: const EdgeInsets.only(left: 20),
                       child: const Icon(Icons.delete, color: Colors.white),
                     ),
-                    direction: DismissDirection.horizontal,
+                    direction: DismissDirection.startToEnd,
                     onDismissed: (direction) {
                       dormController.deleteFavoriteDorm(
                           FirebaseAuth.instance.currentUser!.uid, dorm.id);
@@ -59,11 +59,13 @@ class _FavoritePageState extends State<FavoritePage> {
                     child: ListTile(
                       title: Text(dorm.name),
                       subtitle: Text('Rating: ${dorm.rating.toString()}'),
-                      leading: Image.network(
-                        dorm.imageUrl,
-                        width: 50,
-                        height: 50,
-                        fit: BoxFit.cover,
+                      leading: ClipOval(
+                        child: Image.network(
+                          dorm.imageUrl,
+                          width: 50,
+                          height: 50,
+                          fit: BoxFit.cover,
+                        ),
                       ),
                       onTap: () {
                         Navigator.push(

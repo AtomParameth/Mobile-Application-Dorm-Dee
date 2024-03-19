@@ -36,13 +36,14 @@ class _HomePageState extends State<HomePage> {
 
   static final List<Widget> _widgetOptions = <Widget>[
     buildBody(),
-    FavoritePage(),
+    const FavoritePage(),
     const ProfilePage()
   ];
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: const Color.fromARGB(255, 245, 245, 245),
         appBar: (selectedIndex == 0)
             ? AppBar(
                 title: const SearchBarApp(),
@@ -54,7 +55,7 @@ class _HomePageState extends State<HomePage> {
                     AuthController.instance.isAdmin.value)
                 ? FloatingActionButton(
                     elevation: 0,
-                    backgroundColor: Colors.blueAccent,
+                    backgroundColor: Colors.black87,
                     onPressed: () {
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => const UploadDorm()));
@@ -68,22 +69,30 @@ class _HomePageState extends State<HomePage> {
                     ))
                 : const SizedBox()),
         bottomNavigationBar: BottomNavigationBar(
+          elevation: 40,
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-              icon: Icon(Icons.home),
+              icon: Icon(
+                Icons.home,
+              ),
               label: 'Home',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.bookmark),
+              icon: Icon(
+                Icons.bookmark,
+              ),
               label: 'Favorites',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.people_rounded),
+              icon: Icon(
+                Icons.people_rounded,
+              ),
               label: 'Profile',
-            ),
+            )
           ],
           currentIndex: selectedIndex,
-          selectedItemColor: const Color.fromARGB(255, 11, 167, 240),
+          unselectedItemColor: Colors.grey[700],
+          selectedItemColor: Colors.blue[400],
           onTap: onItemTapped,
           backgroundColor: Colors.white,
         ),
@@ -97,6 +106,7 @@ class _HomePageState extends State<HomePage> {
   static Widget buildBody() {
     return SingleChildScrollView(
       child: Container(
+        color: const Color.fromARGB(255, 245, 245, 245),
         padding: const EdgeInsets.only(bottom: kBottomNavigationBarHeight),
         child: const Column(
           children: [

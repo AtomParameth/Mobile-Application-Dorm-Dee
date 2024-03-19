@@ -16,6 +16,8 @@ class _SearchBarState extends State<SearchBarApp> {
         width: MediaQuery.of(context).size.width,
         height: 40,
         child: SearchBar(
+          backgroundColor: MaterialStateProperty.all<Color>(
+              const Color.fromARGB(255, 245, 245, 245)),
           elevation: MaterialStateProperty.all<double?>(0),
           controller: controller,
           leading: const Icon(Icons.search),

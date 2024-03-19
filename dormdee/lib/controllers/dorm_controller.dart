@@ -108,7 +108,7 @@ class DormController extends GetxController {
 
   Future<void> fetchDorms() async {
     try {
-      dormLoading.value = true;
+      // dormLoading.value = true;
       final dorm = await getDorms();
       dorms.assignAll(dorm);
       final topRated = dorm.toList()

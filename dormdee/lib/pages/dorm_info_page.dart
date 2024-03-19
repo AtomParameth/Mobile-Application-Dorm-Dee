@@ -10,6 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:dormdee/models/dorm_model.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
+import 'package:url_launcher/link.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DormInfoPage extends StatefulWidget {
   DormInfoPage({Key? key, required this.dorm, required this.dormId})
@@ -143,69 +145,91 @@ class _DormInfoPageState extends State<DormInfoPage> {
               ? const Icon(Icons.star, color: Colors.amber)
               : IconButton(
                   onPressed: () {
-                    showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: Text(
-                              'How many stars would you like to give to ${widget.dorm.name}?',
-                              style: const TextStyle(fontSize: 15),
-                            ),
-                            content: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                RatingBarApp(
-                                  ratingScore: rating,
-                                  onRatingChanged: handleRatingChange,
+                    Get.defaultDialog(
+                      backgroundColor: Colors.white,
+                      contentPadding: const EdgeInsets.all(20.0),
+                      titlePadding: const EdgeInsets.only(top: 20.0),
+                      title:
+                          'How many stars would you like to give to ${widget.dorm.name}?',
+                      titleStyle: const TextStyle(fontSize: 15),
+                      content: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          RatingBarApp(
+                            ratingScore: rating,
+                            onRatingChanged: handleRatingChange,
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          TextFormField(
+                            controller: descriptionController,
+                            decoration: const InputDecoration(
+                                contentPadding: EdgeInsets.all(30),
+                                hintText: 'Description...',
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      width: 2,
+                                      color: Color.fromARGB(221, 51, 169, 59)),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20)),
                                 ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                TextFormField(
-                                  controller: descriptionController,
-                                  decoration: const InputDecoration(
-                                      contentPadding: EdgeInsets.all(30),
-                                      hintText: 'Description...',
-                                      border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(20)))),
-                                ),
-                              ],
-                            ),
-                            actions: [
-                              TextButton(
-                                  onPressed: () async {
-                                    Navigator.of(context).pop();
-                                    DocumentSnapshot userDoc =
-                                        await FirebaseFirestore.instance
-                                            .collection('users')
-                                            .doc(currentUser!.uid)
-                                            .get();
+                                border: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Colors.black,
+                                    ),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(20)))),
+                          ),
+                        ],
+                      ),
+                      confirm: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            minimumSize: const Size(50, 40),
+                            backgroundColor:
+                                const Color.fromARGB(221, 51, 169, 59)),
+                        onPressed: () async {
+                          Get.back();
+                          DocumentSnapshot userDoc = await FirebaseFirestore
+                              .instance
+                              .collection('users')
+                              .doc(currentUser!.uid)
+                              .get();
 
-                                    final ratedDorm = RatingModel(
-                                      rating: rating,
-                                      description: descriptionController.text,
-                                      userImage: userDoc.get("profilePicture"),
-                                      user: userDoc.get("userName"),
-                                      userId: currentUser!.uid,
-                                      createdAt: DateTime.now(),
-                                    );
-                                    await DormController.instance
-                                        .rateDorm(widget.dormId, ratedDorm);
-                                    descriptionController.clear();
-                                    handleRatingChange(0);
-
-                                    checkRatedDorm();
-                                  },
-                                  child: const Text("Submit")),
-                              TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: const Text("Cancel"))
-                            ],
+                          final ratedDorm = RatingModel(
+                            rating: rating,
+                            description: descriptionController.text,
+                            userImage: userDoc.get("profilePicture"),
+                            user: userDoc.get("userName"),
+                            userId: currentUser!.uid,
+                            createdAt: DateTime.now(),
                           );
-                        });
+                          await DormController.instance
+                              .rateDorm(widget.dormId, ratedDorm);
+                          descriptionController.clear();
+                          handleRatingChange(0);
+
+                          checkRatedDorm();
+                        },
+                        child: const Text("Submit",
+                            style: TextStyle(color: Colors.white)),
+                      ),
+                      cancel: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              side: const BorderSide(
+                                  color: Color.fromARGB(221, 51, 169, 59)),
+                              minimumSize: const Size(50, 40),
+                              backgroundColor: Colors.white),
+                          onPressed: () {
+                            Get.back();
+                          },
+                          child: const Text(
+                            "Cancel",
+                            style: TextStyle(
+                                color: Color.fromARGB(221, 51, 169, 59)),
+                          )),
+                    );
                   },
                   icon: const Icon(Icons.star_border))),
           const SizedBox(width: 10)
@@ -344,6 +368,17 @@ class _DormInfoPageState extends State<DormInfoPage> {
                                     const SizedBox(
                                       height: 10,
                                     ),
+                                    ElevatedButton(
+                                      onPressed: () async {
+                                        final websiteUrl =
+                                            Uri.parse("${data["contact"]}");
+                                        if (await canLaunchUrl(websiteUrl)) {
+                                          await launchUrl(websiteUrl);
+                                          print('Launching website...');
+                                        }
+                                      },
+                                      child: const Text('Contact'),
+                                    ),
                                     Text(data["contact"]),
                                     const SizedBox(
                                       height: 10,
@@ -355,8 +390,7 @@ class _DormInfoPageState extends State<DormInfoPage> {
                           ),
                         ),
                         Container(
-                          margin: const EdgeInsets.symmetric(
-                              horizontal: 40, vertical: 20),
+                          margin: const EdgeInsets.only(left: 20, top: 20),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -381,9 +415,15 @@ class _DormInfoPageState extends State<DormInfoPage> {
                                       } else {
                                         DormModel dorm = snapshot.data!;
                                         return Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: List.generate(
                                             dorm.ratings.length,
                                             (index) => Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
                                               children: [
                                                 dorm.ratings[index].userImage !=
                                                         ""
@@ -405,47 +445,68 @@ class _DormInfoPageState extends State<DormInfoPage> {
                                                       .symmetric(
                                                       horizontal: 0,
                                                       vertical: 10),
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Row(
-                                                        children: [
-                                                          Text(dorm
-                                                              .ratings[index]
-                                                              .user),
-                                                          const SizedBox(
-                                                              width: 10),
-                                                          RatingBar.builder(
-                                                            allowHalfRating:
-                                                                true,
-                                                            updateOnDrag: false,
-                                                            itemSize: 15,
-                                                            itemCount: 1,
-                                                            ignoreGestures:
-                                                                true,
-                                                            initialRating: 1,
-                                                            itemBuilder:
-                                                                (context, _) =>
-                                                                    const Icon(
-                                                              Icons.star,
-                                                              color:
-                                                                  Colors.amber,
-                                                            ),
-                                                            onRatingUpdate:
-                                                                (double
-                                                                    value) {},
+                                                  child: SizedBox(
+                                                    width: 300,
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .only(
+                                                                  right: 20),
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .start,
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Text(dorm
+                                                                  .ratings[
+                                                                      index]
+                                                                  .user),
+                                                              const SizedBox(
+                                                                  width: 10),
+                                                              RatingBar.builder(
+                                                                allowHalfRating:
+                                                                    true,
+                                                                updateOnDrag:
+                                                                    false,
+                                                                itemSize: 15,
+                                                                itemCount: 1,
+                                                                ignoreGestures:
+                                                                    true,
+                                                                initialRating:
+                                                                    1,
+                                                                itemBuilder:
+                                                                    (context,
+                                                                            _) =>
+                                                                        const Icon(
+                                                                  Icons.star,
+                                                                  color: Colors
+                                                                      .amber,
+                                                                ),
+                                                                onRatingUpdate:
+                                                                    (double
+                                                                        value) {},
+                                                              ),
+                                                              const SizedBox(
+                                                                  width: 5),
+                                                              Text(
+                                                                  "${dorm.ratings[index].rating.toDouble()}")
+                                                            ],
                                                           ),
-                                                          const SizedBox(
-                                                              width: 5),
-                                                          Text(
-                                                              "${dorm.ratings[index].rating.toDouble()}")
-                                                        ],
-                                                      ),
-                                                      Text(dorm.ratings[index]
-                                                          .description),
-                                                    ],
+                                                        ),
+                                                        Text(
+                                                          dorm.ratings[index]
+                                                              .description,
+                                                        ),
+                                                      ],
+                                                    ),
                                                   ),
                                                 ),
                                               ],

@@ -115,7 +115,15 @@ class _EditDormState extends State<EditDorm> {
                   controller: DormController.instance.contact,
                   title: "Contact"),
               const SizedBox(height: 20),
-              const DropDownUpload(),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 32),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    DropDownUpload(),
+                  ],
+                ),
+              ),
               const SizedBox(
                 height: 30,
               ),
@@ -127,7 +135,7 @@ class _EditDormState extends State<EditDorm> {
                     Get.defaultDialog(
                         backgroundColor: Colors.white,
                         contentPadding: const EdgeInsets.all(20.0),
-                        title: "Ed Dorms",
+                        title: "Edit Dorms",
                         titleStyle: const TextStyle(color: Colors.black),
                         titlePadding: const EdgeInsets.only(top: 20.0),
                         middleText:

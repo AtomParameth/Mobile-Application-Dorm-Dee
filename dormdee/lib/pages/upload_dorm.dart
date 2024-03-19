@@ -4,8 +4,25 @@ import 'package:dormdee/utilities/text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class UploadDorm extends StatelessWidget {
+class UploadDorm extends StatefulWidget {
   const UploadDorm({Key? key}) : super(key: key);
+
+  @override
+  State<UploadDorm> createState() => _UploadDormState();
+}
+
+class _UploadDormState extends State<UploadDorm> {
+  @override
+  void initState() {
+    DormController.instance.imageUrlRx.value = "";
+    DormController.instance.name.text = "";
+    DormController.instance.address.text = "";
+    DormController.instance.information.text = "";
+    DormController.instance.price.text = "";
+    DormController.instance.category.text = "";
+    DormController.instance.contact.text = "";
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +51,7 @@ class UploadDorm extends StatelessWidget {
                 child: Obx(() {
                   return DormController.instance.imageUrlRx.value == ""
                       ? const CircleAvatar(
-                          radius: 100,
+                          radius: 80,
                           child: Icon(
                             Icons.add_a_photo,
                             size: 50.0,
@@ -79,16 +96,27 @@ class UploadDorm extends StatelessWidget {
               const SizedBox(
                 height: 20,
               ),
-              const DropDownUpload(),
+              const Padding(
+                padding: EdgeInsets.only(left: 35.0),
+                child: Row(
+                  children: [
+                    DropDownUpload(),
+                  ],
+                ),
+              ),
               const SizedBox(
                 height: 50,
               ),
               ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(50, 40),
+                      backgroundColor: const Color.fromARGB(221, 51, 169, 59)),
                   onPressed: () {
                     DormController.instance
                         .uploadDorm(DormController.instance.imageUrl);
                   },
-                  child: const Text("Submit"))
+                  child: const Text("Submit",
+                      style: TextStyle(color: Colors.white)))
             ],
           ),
         ),
