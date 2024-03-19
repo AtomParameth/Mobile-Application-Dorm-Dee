@@ -42,7 +42,7 @@ class _FavoritePageState extends State<FavoritePage> {
                   direction: DismissDirection.horizontal,
                   onDismissed: (direction) {
                     dormController.deleteFavoriteDorm(
-                        FirebaseAuth.instance.currentUser!.uid, index);
+                        FirebaseAuth.instance.currentUser!.uid, dorm.id);
                     dormController.loadFavDorm();
                   },
                   key: UniqueKey(),
@@ -69,7 +69,11 @@ class _FavoritePageState extends State<FavoritePage> {
                   ),
                 );
               } else {
-                return const Text("No favorite dorms");
+                return Column(
+                  children: [
+                    Text('No favorite dorms'),
+                  ],
+                );
               }
             },
           );

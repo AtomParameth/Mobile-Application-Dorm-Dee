@@ -158,9 +158,16 @@ class DormCardState extends State<DormCard> {
                                 FirebaseAuth.instance.currentUser!.uid);
                             dormController.loadFavDorm();
                           } else {
-                            dormController.deleteFavoriteDorm(
-                                FirebaseAuth.instance.currentUser!.uid, index);
-                            dormController.loadFavDorm();
+                            try {
+                              dormController.deleteFavoriteDorm(
+                                FirebaseAuth.instance.currentUser!.uid,
+                                DormController.instance.favoriteDormIds[index],
+                              );
+                              dormController.loadFavDorm();
+                            } catch (e) {
+                              // Handle the error here
+                              print('Error occurred: $e');
+                            }
                           }
                         },
                       ),

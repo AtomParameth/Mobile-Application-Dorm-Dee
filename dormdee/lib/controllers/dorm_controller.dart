@@ -46,22 +46,22 @@ class DormController extends GetxController {
     favoriteDorms.assignAll(newDorms);
   }
 
-  Future<void> deleteFavoriteDorm(String documentId, int index) async {
+  Future<void> deleteFavoriteDorm(String documentId, String dormId) async {
     try {
       // ระบุ collection ที่เก็บข้อมูล favorite dorms
       FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
       // ลบ dorm ที่ระบุออกจากรายการโปรด
       await _firestore.collection('users').doc(documentId).update({
-        "favdorm": FieldValue.arrayRemove([dorms[index].id]),
+        "favdorm": FieldValue.arrayRemove([dormId]),
       });
-      // print('Favorite dorm deleted successfully');
+      print('Favorite dorm deleted successfully ${dormId}');
       // ลบข้อมูล dorm ออกจาก collection
-      QuerySnapshot querySnapshot = await _firestore
-          .collection('users')
-          .where('favdorm', isEqualTo: dorms[index].id)
-          .get();
-      querySnapshot.docs[0].reference.delete();
+      // QuerySnapshot querySnapshot = await _firestore
+      //     .collection('users')
+      //     .where('favdorm', isEqualTo: dorms[index].id)
+      //     .get();
+      // querySnapshot.docs[0].reference.delete();
     } catch (e) {
       debugPrint('Error deleting favorite dorm: $e');
     }
