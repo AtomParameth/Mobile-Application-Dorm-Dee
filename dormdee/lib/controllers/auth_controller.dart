@@ -19,8 +19,20 @@ class AuthController extends GetxController {
   TextEditingController confirmPasswordController = TextEditingController();
   TextEditingController phoneNumberController = TextEditingController();
   TextEditingController userNameController = TextEditingController();
+  RxBool isAdmin = false.obs;
 
   RxBool hidePassword = true.obs;
+
+  Future<void> checkAdmin() async {
+    final userDoc = await FirebaseFirestore.instance
+        .collection("users")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .get();
+    if (userDoc.exists) {
+      final UserModel user = UserModel.fromSnapshot(userDoc);
+      isAdmin.value = user.isAdmin;
+    }
+  }
 
   void signUp() async {
     try {
@@ -108,6 +120,7 @@ class AuthController extends GetxController {
         email: user.email ?? "",
         phoneNumber: user.phoneNumber ?? "",
         profilePicture: user.photoURL ?? "",
+        isAdmin: false,
         favdorm: [],
       );
       await FirebaseFirestore.instance
@@ -125,6 +138,7 @@ class AuthController extends GetxController {
       phoneNumber: phoneNumber,
       userName: userName,
       profilePicture: "",
+      isAdmin: false,
       favdorm: [],
     );
     FirebaseFirestore.instance

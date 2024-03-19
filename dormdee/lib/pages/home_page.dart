@@ -1,3 +1,4 @@
+import 'package:dormdee/controllers/auth_controller.dart';
 import 'package:dormdee/controllers/dorm_controller.dart';
 import 'package:dormdee/pages/profile_page.dart';
 import 'package:dormdee/pages/upload_dorm.dart';
@@ -28,6 +29,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
+    AuthController.instance.checkAdmin();
+    ever(AuthController.instance.isAdmin, (_) {});
     super.initState();
   }
 
@@ -46,22 +49,24 @@ class _HomePageState extends State<HomePage> {
                 backgroundColor: Colors.black87,
               )
             : null,
-        floatingActionButton: (selectedIndex == 0 || selectedIndex == 1)
-            ? FloatingActionButton(
-                elevation: 0,
-                backgroundColor: Colors.black87,
-                onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const UploadDorm()));
-                },
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                child: const Icon(
-                  Icons.add,
-                  color: Colors.white,
-                ))
-            : null,
+        floatingActionButton: Obx(() =>
+            ((selectedIndex == 0 || selectedIndex == 1) &&
+                    AuthController.instance.isAdmin.value)
+                ? FloatingActionButton(
+                    elevation: 0,
+                    backgroundColor: Colors.blueAccent,
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const UploadDorm()));
+                    },
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    child: const Icon(
+                      Icons.add,
+                      color: Colors.white,
+                    ))
+                : const SizedBox()),
         bottomNavigationBar: BottomNavigationBar(
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(

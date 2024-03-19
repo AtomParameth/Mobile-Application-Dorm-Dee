@@ -6,6 +6,7 @@ class UserModel {
   final String email;
   final String phoneNumber;
   final String profilePicture;
+  final bool isAdmin;
   final List<String> favdorm;
 
   UserModel({
@@ -14,6 +15,7 @@ class UserModel {
     required this.email,
     required this.phoneNumber,
     required this.profilePicture,
+    required this.isAdmin,
     required this.favdorm,
   });
 
@@ -24,6 +26,7 @@ class UserModel {
       email: "",
       phoneNumber: "",
       profilePicture: "",
+      isAdmin: false,
       favdorm: [],
     );
   }
@@ -35,6 +38,7 @@ class UserModel {
       "email": email,
       "phoneNumber": phoneNumber,
       "profilePicture": profilePicture,
+      "isAdmin": isAdmin,
       "favdorm": favdorm,
     };
   }
@@ -46,10 +50,11 @@ class UserModel {
       email: map['email'],
       phoneNumber: map['phoneNumber'],
       profilePicture: map['profilePicture'],
+      isAdmin: map['isAdmin'],
       favdorm: List<String>.from(map['favdorm'] ?? []),
     );
   }
-  
+
   factory UserModel.fromSnapshot(
       DocumentSnapshot<Map<String, dynamic>> document) {
     if (document.data() == null) {
@@ -62,9 +67,9 @@ class UserModel {
         email: data["email"] ?? "",
         phoneNumber: data["phoneNumber"] ?? "",
         profilePicture: data["profilePicture"] ?? "",
+        isAdmin: data["isAdmin"] ?? false,
         favdorm: List<String>.from(data["favdorm"] ?? []),
       );
     }
-    
   }
 }

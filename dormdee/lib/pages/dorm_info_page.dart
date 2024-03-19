@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dormdee/controllers/auth_controller.dart';
 import 'package:dormdee/controllers/dorm_controller.dart';
 import 'package:dormdee/models/rating_model.dart';
 import 'package:dormdee/pages/edit_dorm.dart';
@@ -56,82 +57,88 @@ class _DormInfoPageState extends State<DormInfoPage> {
       appBar: AppBar(
         title: Text(widget.dorm.name),
         actions: [
-          IconButton(
-              onPressed: () {
-                Get.defaultDialog(
-                    backgroundColor: Colors.white,
-                    contentPadding: const EdgeInsets.all(20.0),
-                    title: "Delete Dorms",
-                    titleStyle: const TextStyle(color: Colors.black),
-                    titlePadding: const EdgeInsets.only(top: 20.0),
-                    middleText: "Are you sure you want to delete dorms?",
-                    content: const Column(children: [
-                      CircleAvatar(
-                        radius: 40,
-                        backgroundColor: Color.fromARGB(221, 255, 71, 54),
-                        child: Icon(
-                          Icons.delete,
-                          color: Colors.white,
-                          size: 30,
+          Visibility(
+            visible: AuthController.instance.isAdmin.value,
+            child: IconButton(
+                onPressed: () {
+                  Get.defaultDialog(
+                      backgroundColor: Colors.white,
+                      contentPadding: const EdgeInsets.all(20.0),
+                      title: "Delete Dorms",
+                      titleStyle: const TextStyle(color: Colors.black),
+                      titlePadding: const EdgeInsets.only(top: 20.0),
+                      middleText: "Are you sure you want to delete dorms?",
+                      content: const Column(children: [
+                        CircleAvatar(
+                          radius: 40,
+                          backgroundColor: Color.fromARGB(221, 255, 71, 54),
+                          child: Icon(
+                            Icons.delete,
+                            color: Colors.white,
+                            size: 30,
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 20.0),
-                      Text("Are you sure you want to delete dorms?")
-                    ]),
-                    onCancel: () {
-                      Get.back();
-                    },
-                    cancelTextColor: Colors.black,
-                    cancel: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          side: const BorderSide(
-                              color: Color.fromARGB(221, 255, 71, 54)),
-                          minimumSize: const Size(50, 40),
-                          backgroundColor: Colors.white),
-                      onPressed: () {
+                        SizedBox(height: 20.0),
+                        Text("Are you sure you want to delete dorms?")
+                      ]),
+                      onCancel: () {
                         Get.back();
                       },
-                      child: const Text("Cancel",
-                          style: TextStyle(
-                            color: Color.fromARGB(221, 255, 71, 54),
-                          )),
-                    ),
-                    confirm: ElevatedButton(
+                      cancelTextColor: Colors.black,
+                      cancel: ElevatedButton(
                         style: ElevatedButton.styleFrom(
+                            side: const BorderSide(
+                                color: Color.fromARGB(221, 255, 71, 54)),
                             minimumSize: const Size(50, 40),
-                            backgroundColor:
-                                const Color.fromARGB(221, 255, 71, 54)),
+                            backgroundColor: Colors.white),
                         onPressed: () {
-                          widget.dormController.deleteDorm(widget.dormId);
                           Get.back();
-                          // Navigator.pop(context);
                         },
-                        child: const Text(
-                          "Confirm",
-                          style: TextStyle(color: Colors.white),
-                        )),
-                    barrierDismissible: false);
-              },
-              icon: const Icon(Icons.delete)),
-          IconButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => EditDorm(
-                      dormName: widget.dorm.name,
-                      dormAddress: widget.dorm.address,
-                      dormInformation: widget.dorm.information,
-                      dormPrice: widget.dorm.price,
-                      dormImageUrl: widget.dorm.imageUrl,
-                      dormCategory: widget.dorm.category,
-                      dormId: widget.dormId,
-                      dormContact: widget.dorm.contact,
+                        child: const Text("Cancel",
+                            style: TextStyle(
+                              color: Color.fromARGB(221, 255, 71, 54),
+                            )),
+                      ),
+                      confirm: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              minimumSize: const Size(50, 40),
+                              backgroundColor:
+                                  const Color.fromARGB(221, 255, 71, 54)),
+                          onPressed: () {
+                            widget.dormController.deleteDorm(widget.dormId);
+                            Get.back();
+                            // Navigator.pop(context);
+                          },
+                          child: const Text(
+                            "Confirm",
+                            style: TextStyle(color: Colors.white),
+                          )),
+                      barrierDismissible: false);
+                },
+                icon: const Icon(Icons.delete)),
+          ),
+          Visibility(
+            visible: AuthController.instance.isAdmin.value,
+            child: IconButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => EditDorm(
+                        dormName: widget.dorm.name,
+                        dormAddress: widget.dorm.address,
+                        dormInformation: widget.dorm.information,
+                        dormPrice: widget.dorm.price,
+                        dormImageUrl: widget.dorm.imageUrl,
+                        dormCategory: widget.dorm.category,
+                        dormId: widget.dormId,
+                        dormContact: widget.dorm.contact,
+                      ),
                     ),
-                  ),
-                );
-              },
-              icon: const Icon(Icons.edit)),
+                  );
+                },
+                icon: const Icon(Icons.edit)),
+          ),
           Obx(() => hasRated.value
               ? const Icon(Icons.star, color: Colors.amber)
               : IconButton(
