@@ -368,18 +368,22 @@ class _DormInfoPageState extends State<DormInfoPage> {
                                     const SizedBox(
                                       height: 10,
                                     ),
-                                    ElevatedButton(
-                                      onPressed: () async {
+                                    GestureDetector(
+                                      onTap: () async {
                                         final websiteUrl =
                                             Uri.parse("${data["contact"]}");
                                         if (await canLaunchUrl(websiteUrl)) {
                                           await launchUrl(websiteUrl);
-                                          print('Launching website...');
                                         }
                                       },
-                                      child: const Text('Contact'),
+                                      child: ClipOval(
+                                          child: Image.network(
+                                        "https://static.vecteezy.com/system/resources/previews/023/986/613/non_2x/facebook-logo-facebook-logo-transparent-facebook-icon-transparent-free-free-png.png",
+                                        fit: BoxFit.fill,
+                                        width: 50,
+                                        height: 50,
+                                      )),
                                     ),
-                                    Text(data["contact"]),
                                     const SizedBox(
                                       height: 10,
                                     ),

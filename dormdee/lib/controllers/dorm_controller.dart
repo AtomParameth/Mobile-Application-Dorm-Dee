@@ -168,7 +168,7 @@ class DormController extends GetxController {
     try {
       final snapshot = await fs
           .collection("dorms")
-          .orderBy("createdAt", descending: false)
+          .orderBy("createdAt", descending: true)
           .get();
 
       final list =
