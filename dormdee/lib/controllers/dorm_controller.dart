@@ -276,7 +276,7 @@ class DormController extends GetxController {
   Future<void> deleteDorm(String id) async {
     try {
       await fs.collection("dorms").doc(id).delete();
-      fetchDorms();
+      Get.to(() => HomePage());
     } on FirebaseException catch (e) {
       showErrorSnackbar("Error", e.message.toString());
     }
