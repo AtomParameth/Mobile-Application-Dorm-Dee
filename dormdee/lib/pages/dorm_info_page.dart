@@ -252,6 +252,11 @@ class _DormInfoPageState extends State<DormInfoPage> {
                     child: Text("Error"),
                   );
                 } else {
+                  if (snapshot.data!.data() == null) {
+                    return const Center(
+                      child: Text("No data"),
+                    );
+                  }
                   Map<String, dynamic> data =
                       snapshot.data!.data() as Map<String, dynamic>;
                   return Container(
