@@ -18,12 +18,15 @@ class DormCardState extends State<DormCard> {
 
   @override
   void initState() {
+    dormController.fetchDorms().then(
+        (value) => Future.microtask(() => dormController.filterDorms("All")));
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _subscription = dormController.filteredDormsStream.listen((_) {
         dormController.update(); // Refresh UI when dorms changes
       });
     });
+    dormController.loadFavDorm();
   }
 
   @override

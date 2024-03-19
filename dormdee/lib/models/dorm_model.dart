@@ -12,6 +12,7 @@ class DormModel {
   final String contact;
   final DateTime createdAt;
   final List<RatingModel> ratings;
+
   bool isFavorite;
   String id;
 
@@ -61,6 +62,7 @@ class DormModel {
       "id": id,
     };
   }
+
   factory DormModel.fromMap(Map<String, dynamic> data) {
     var ratingList = data["ratings"] as List?;
     List<RatingModel> ratings = ratingList != null
@@ -80,7 +82,7 @@ class DormModel {
       ratings: ratings,
     );
   }
-  
+
   factory DormModel.fromSnapshot(
       DocumentSnapshot<Map<String, dynamic>> document) {
     if (document.data() == null) {

@@ -33,6 +33,7 @@ class DormController extends GetxController {
   RxList<DormModel> filteredDorms = <DormModel>[].obs;
   RxList<DormModel> favoriteDorms = <DormModel>[].obs;
   RxList<String> favoriteDormIds = <String>[].obs;
+
   var dropdownValue = "All".obs;
   void toggleFavorite(int index) {
     dorms[index].isFavorite = !dorms[index].isFavorite;
@@ -92,13 +93,17 @@ class DormController extends GetxController {
   }
 
   void filterDorms(String category) {
-    dropdownValue.value = category;
-    if (category == 'All') {
-      filteredDorms.assignAll(dorms);
-    } else {
-      filteredDorms.assignAll(
-        dorms.where((dorm) => dorm.category == category).toList(),
-      );
+    try {
+      dropdownValue.value = category;
+      if (category == 'All') {
+        filteredDorms.assignAll(dorms);
+      } else {
+        filteredDorms.assignAll(
+          dorms.where((dorm) => dorm.category == category).toList(),
+        );
+      }
+    } catch (err) {
+      debugPrint(err.toString());
     }
   }
 
