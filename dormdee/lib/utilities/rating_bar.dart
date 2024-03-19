@@ -8,8 +8,8 @@ class RatingBarApp extends StatefulWidget {
     required this.onRatingChanged,
   }) : super(key: key);
 
-  final int ratingScore;
-  final Function(int) onRatingChanged;
+  final double ratingScore;
+  final Function(double) onRatingChanged;
 
   @override
   State<RatingBarApp> createState() => RatingBarState();
@@ -18,7 +18,7 @@ class RatingBarApp extends StatefulWidget {
 class RatingBarState extends State<RatingBarApp> {
   @override
   Widget build(BuildContext context) {
-    int _ratingScore = widget.ratingScore;
+    double _ratingScore = widget.ratingScore;
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
       child: RatingBar.builder(
@@ -36,7 +36,7 @@ class RatingBarState extends State<RatingBarApp> {
         ),
         onRatingUpdate: (double rating) {
           setState(() {
-            _ratingScore = rating.toInt();
+            _ratingScore = rating;
             debugPrint('Rating: $_ratingScore');
             widget.onRatingChanged(_ratingScore);
           });

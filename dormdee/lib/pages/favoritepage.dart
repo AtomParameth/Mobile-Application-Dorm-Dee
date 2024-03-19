@@ -26,57 +26,62 @@ class _FavoritePageState extends State<FavoritePage> {
           DormController dormController = Get.find();
           List<String> favDorm = dormController.favoriteDormIds;
           List<DormModel> dorms = dormController.favoriteDorms;
-          return ListView.builder(
-            itemCount: dorms.length,
-            itemBuilder: (context, index) {
-              DormModel dorm = dorms[index];
 
-              if (favDorm.contains(dorm.id)) {
-                return Dismissible(
-                  background: Container(
-                    color: Colors.red,
-                    alignment: Alignment.centerLeft,
-                    padding: const EdgeInsets.only(left: 20),
-                    child: const Icon(Icons.delete, color: Colors.white),
-                  ),
-                  direction: DismissDirection.horizontal,
-                  onDismissed: (direction) {
-                    dormController.deleteFavoriteDorm(
-                        FirebaseAuth.instance.currentUser!.uid, dorm.id);
-                    dormController.loadFavDorm();
-                  },
-                  key: UniqueKey(),
-                  child: ListTile(
-                    title: Text(dorm.name),
-                    subtitle: Text('Rating: ${dorm.rating.toString()}'),
-                    leading: Image.network(
-                      dorm.imageUrl,
-                      width: 50,
-                      height: 50,
-                      fit: BoxFit.cover,
+          if (favDorm.isEmpty) {
+            return const Center(
+              child: Text(
+                'No favorite dorms yet',
+                style: TextStyle(fontSize: 20, color: Colors.grey),
+              ),
+            );
+          } else {
+            return ListView.builder(
+              itemCount: dorms.length,
+              itemBuilder: (context, index) {
+                DormModel dorm = dorms[index];
+
+                if (favDorm.contains(dorm.id)) {
+                  return Dismissible(
+                    background: Container(
+                      color: Colors.red,
+                      alignment: Alignment.centerLeft,
+                      padding: const EdgeInsets.only(left: 20),
+                      child: const Icon(Icons.delete, color: Colors.white),
                     ),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => DormInfoPage(
-                            dorm: dorm,
-                            dormId: dorm.id,
-                          ),
-                        ),
-                      );
+                    direction: DismissDirection.horizontal,
+                    onDismissed: (direction) {
+                      dormController.deleteFavoriteDorm(
+                          FirebaseAuth.instance.currentUser!.uid, dorm.id);
+                      dormController.loadFavDorm();
+                      dormController.filteredDorms[index].isFavorite = false;
                     },
-                  ),
-                );
-              } else {
-                return Column(
-                  children: [
-                    Text('No favorite dorms'),
-                  ],
-                );
-              }
-            },
-          );
+                    key: UniqueKey(),
+                    child: ListTile(
+                      title: Text(dorm.name),
+                      subtitle: Text('Rating: ${dorm.rating.toString()}'),
+                      leading: Image.network(
+                        dorm.imageUrl,
+                        width: 50,
+                        height: 50,
+                        fit: BoxFit.cover,
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => DormInfoPage(
+                              dorm: dorm,
+                              dormId: dorm.id,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                }
+              },
+            );
+          }
         },
       ),
     );

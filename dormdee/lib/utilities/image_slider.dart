@@ -116,7 +116,7 @@ class _ImageSliderState extends State<ImageSlider> {
                   },
                   decorator: DotsDecorator(
                       color: Colors.grey,
-                      activeColor: Colors.black87,
+                      activeColor: const Color.fromARGB(255, 10, 129, 226),
                       size: const Size.square(9.0),
                       activeSize: const Size(18.0, 9.0),
                       activeShape: RoundedRectangleBorder(

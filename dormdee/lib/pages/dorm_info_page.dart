@@ -3,10 +3,11 @@ import 'package:dormdee/controllers/dorm_controller.dart';
 import 'package:dormdee/models/rating_model.dart';
 import 'package:dormdee/pages/edit_dorm.dart';
 import 'package:dormdee/utilities/image_slider_dormInfo.dart';
-import 'package:dormdee/utilities/rating_bart.dart';
+import 'package:dormdee/utilities/rating_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:dormdee/models/dorm_model.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 
 class DormInfoPage extends StatefulWidget {
@@ -23,11 +24,11 @@ class DormInfoPage extends StatefulWidget {
 
 class _DormInfoPageState extends State<DormInfoPage> {
   RxBool hasRated = false.obs;
-  int rating = 0;
+  double rating = 0;
   TextEditingController descriptionController = TextEditingController();
   final currentUser = FirebaseAuth.instance.currentUser;
 
-  void handleRatingChange(int newRating) {
+  void handleRatingChange(double newRating) {
     rating = newRating;
   }
 
@@ -132,7 +133,7 @@ class _DormInfoPageState extends State<DormInfoPage> {
               },
               icon: const Icon(Icons.edit)),
           Obx(() => hasRated.value
-              ? const Text("Rated")
+              ? const Icon(Icons.star, color: Colors.amber)
               : IconButton(
                   onPressed: () {
                     showDialog(
@@ -199,7 +200,8 @@ class _DormInfoPageState extends State<DormInfoPage> {
                           );
                         });
                   },
-                  icon: const Icon(Icons.star_border)))
+                  icon: const Icon(Icons.star_border))),
+          const SizedBox(width: 10)
         ],
       ),
       body: SingleChildScrollView(
@@ -221,142 +223,239 @@ class _DormInfoPageState extends State<DormInfoPage> {
                 } else {
                   Map<String, dynamic> data =
                       snapshot.data!.data() as Map<String, dynamic>;
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      ImageSliderDormInfo(imageUrl: data['imageUrl']),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 40),
-                        child: Card(
-                          color: Colors.white70,
-                          surfaceTintColor: Colors.white,
+                  return Container(
+                    color: const Color.fromARGB(255, 245, 245, 245),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        ImageSliderDormInfo(imageUrl: data['imageUrl']),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 25),
+                          child: Card(
+                            color: Colors.white,
+                            surfaceTintColor: Colors.white,
+                            elevation: 5,
+                            child: Container(
+                              margin: const EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 10),
+                              child: SizedBox(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    const Text(
+                                      "Information",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 18),
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    Text(data["information"]),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    const Divider(
+                                      color: Colors.grey,
+                                    ),
+                                    const Text(
+                                      "Price",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 18),
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    Text('Month: ${data["price"]} Baht'),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    const Divider(
+                                      color: Colors.grey,
+                                    ),
+                                    const Text(
+                                      "Rating",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 18),
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    Row(
+                                      children: [
+                                        Text(data["rating"].toStringAsFixed(1)),
+                                        const SizedBox(
+                                          width: 5,
+                                        ),
+                                        const Icon(
+                                          Icons.star,
+                                          color: Colors.amber,
+                                          size: 20,
+                                        )
+                                      ],
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    const Divider(
+                                      color: Colors.grey,
+                                    ),
+                                    const Text(
+                                      "Zone",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 18),
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    Text(data["category"]),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    const Divider(
+                                      color: Colors.grey,
+                                    ),
+                                    const Text(
+                                      "Contact",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 18),
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    Text(data["contact"]),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 40, vertical: 20),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const Text(
-                                "Information",
+                                "Comments",
                                 style: TextStyle(
-                                    fontWeight: FontWeight.w500, fontSize: 18),
+                                    fontWeight: FontWeight.w500, fontSize: 20),
                               ),
+                              Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 0, vertical: 10),
+                                  child: StreamBuilder<DormModel>(
+                                    stream: widget.dormController
+                                        .streamDorm(widget.dormId),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return const CircularProgressIndicator();
+                                      } else if (snapshot.hasError) {
+                                        return Text('Error: ${snapshot.error}');
+                                      } else {
+                                        DormModel dorm = snapshot.data!;
+                                        return Column(
+                                          children: List.generate(
+                                            dorm.ratings.length,
+                                            (index) => Row(
+                                              children: [
+                                                dorm.ratings[index].userImage !=
+                                                        ""
+                                                    ? CircleAvatar(
+                                                        backgroundImage:
+                                                            NetworkImage(dorm
+                                                                .ratings[index]
+                                                                .userImage),
+                                                      )
+                                                    : const CircleAvatar(
+                                                        child:
+                                                            Icon(Icons.person),
+                                                      ),
+                                                const SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      horizontal: 0,
+                                                      vertical: 10),
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Row(
+                                                        children: [
+                                                          Text(dorm
+                                                              .ratings[index]
+                                                              .user),
+                                                          const SizedBox(
+                                                              width: 10),
+                                                          RatingBar.builder(
+                                                            allowHalfRating:
+                                                                true,
+                                                            updateOnDrag: false,
+                                                            itemSize: 15,
+                                                            itemCount: 1,
+                                                            ignoreGestures:
+                                                                true,
+                                                            initialRating: 1,
+                                                            itemBuilder:
+                                                                (context, _) =>
+                                                                    const Icon(
+                                                              Icons.star,
+                                                              color:
+                                                                  Colors.amber,
+                                                            ),
+                                                            onRatingUpdate:
+                                                                (double
+                                                                    value) {},
+                                                          ),
+                                                          const SizedBox(
+                                                              width: 5),
+                                                          Text(
+                                                              "${dorm.ratings[index].rating.toDouble()}")
+                                                        ],
+                                                      ),
+                                                      Text(dorm.ratings[index]
+                                                          .description),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                    },
+                                  )),
                               const SizedBox(
                                 height: 10,
-                              ),
-                              Text(data["information"]),
+                              )
                             ],
                           ),
                         ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 40),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              "Price",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w500, fontSize: 18),
-                            ),
-                            Text('Month: ${data["price"]} Baht'),
-                            const Text(
-                              "Rating",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w500, fontSize: 18),
-                            ),
-                            Text(data["rating"].toStringAsFixed(1)),
-                            const Text(
-                              "Zone",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w500, fontSize: 18),
-                            ),
-                            Text(data["category"]),
-                            const Text(
-                              "Contact",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w500, fontSize: 18),
-                            ),
-                            Text(data["contact"]),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            const Text(
-                              "Comments",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w500, fontSize: 18),
-                            ),
-                            Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 0, vertical: 10),
-                                child: StreamBuilder<DormModel>(
-                                  stream: widget.dormController
-                                      .streamDorm(widget.dormId),
-                                  builder: (context, snapshot) {
-                                    if (snapshot.connectionState ==
-                                        ConnectionState.waiting) {
-                                      return const CircularProgressIndicator();
-                                    } else if (snapshot.hasError) {
-                                      return Text('Error: ${snapshot.error}');
-                                    } else {
-                                      DormModel dorm = snapshot.data!;
-                                      return Column(
-                                        children: List.generate(
-                                          dorm.ratings.length,
-                                          (index) => Row(
-                                            children: [
-                                              dorm.ratings[index].userImage !=
-                                                      ""
-                                                  ? CircleAvatar(
-                                                      backgroundImage:
-                                                          NetworkImage(dorm
-                                                              .ratings[index]
-                                                              .userImage),
-                                                    )
-                                                  : const CircleAvatar(
-                                                      child: Icon(Icons.person),
-                                                    ),
-                                              const SizedBox(
-                                                width: 10,
-                                              ),
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 0,
-                                                        vertical: 10),
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(dorm
-                                                        .ratings[index].user),
-                                                    Text(dorm.ratings[index]
-                                                        .description),
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      );
-                                    }
-                                  },
-                                )),
-                            const SizedBox(
-                              height: 10,
-                            )
-                          ],
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   );
                 }
               })),

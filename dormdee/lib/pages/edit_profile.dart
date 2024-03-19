@@ -56,7 +56,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       : ClipOval(
                           child: Image.network(
                             AuthController.instance.imageUrlRx.value,
-                            fit: BoxFit.fill,
+                            fit: BoxFit.cover,
                             width: 200,
                             height: 200,
                           ),

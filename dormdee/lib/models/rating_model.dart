@@ -4,7 +4,7 @@ class RatingModel {
   final String user;
   final String userImage;
   final String userId;
-  final int rating;
+  final double rating;
   final String description;
   final DateTime createdAt;
 
@@ -62,7 +62,7 @@ class RatingModel {
       user: data["user"] ?? "",
       userImage: data["userImage"] ?? "",
       userId: data["userId"] ?? "",
-      rating: data["rating"] ?? 0,
+      rating: (data["rating"] ?? 0).toDouble(),
       description: data["description"] ?? "",
       createdAt: (data["createdAt"] as Timestamp?)?.toDate() ?? DateTime.now(),
     );

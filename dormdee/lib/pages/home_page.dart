@@ -49,7 +49,7 @@ class _HomePageState extends State<HomePage> {
         floatingActionButton: (selectedIndex == 0 || selectedIndex == 1)
             ? FloatingActionButton(
                 elevation: 0,
-                backgroundColor: Colors.blueAccent,
+                backgroundColor: Colors.black87,
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => const UploadDorm()));
@@ -107,9 +107,18 @@ class _HomePageState extends State<HomePage> {
             ),
             SizedBox(height: 20),
             ImageSlider(),
+            SizedBox(
+              height: 15,
+            ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [DropDownMenu()],
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Padding(
+                    padding: EdgeInsets.only(right: 45), child: DropDownMenu()),
+              ],
+            ),
+            SizedBox(
+              height: 10,
             ),
             DormCard(),
           ],
