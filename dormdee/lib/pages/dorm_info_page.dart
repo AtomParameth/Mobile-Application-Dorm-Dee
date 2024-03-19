@@ -57,8 +57,59 @@ class _DormInfoPageState extends State<DormInfoPage> {
         actions: [
           IconButton(
               onPressed: () {
-                widget.dormController.deleteDorm(widget.dormId);
-                Navigator.pop(context);
+                Get.defaultDialog(
+                    backgroundColor: Colors.white,
+                    contentPadding: const EdgeInsets.all(20.0),
+                    title: "Delete Dorms",
+                    titleStyle: const TextStyle(color: Colors.black),
+                    titlePadding: const EdgeInsets.only(top: 20.0),
+                    middleText: "Are you sure you want to delete dorms?",
+                    content: const Column(children: [
+                      CircleAvatar(
+                        radius: 40,
+                        backgroundColor: Color.fromARGB(221, 255, 71, 54),
+                        child: Icon(
+                          Icons.delete,
+                          color: Colors.white,
+                          size: 30,
+                        ),
+                      ),
+                      SizedBox(height: 20.0),
+                      Text("Are you sure you want to delete dorms?")
+                    ]),
+                    onCancel: () {
+                      Get.back();
+                    },
+                    cancelTextColor: Colors.black,
+                    cancel: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          side: const BorderSide(
+                              color: Color.fromARGB(221, 255, 71, 54)),
+                          minimumSize: const Size(50, 40),
+                          backgroundColor: Colors.white),
+                      onPressed: () {
+                        Get.back();
+                      },
+                      child: const Text("Cancel",
+                          style: TextStyle(
+                            color: Color.fromARGB(221, 255, 71, 54),
+                          )),
+                    ),
+                    confirm: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            minimumSize: const Size(50, 40),
+                            backgroundColor:
+                                const Color.fromARGB(221, 255, 71, 54)),
+                        onPressed: () {
+                          widget.dormController.deleteDorm(widget.dormId);
+                          Get.back();
+                          // Navigator.pop(context);
+                        },
+                        child: const Text(
+                          "Confirm",
+                          style: TextStyle(color: Colors.white),
+                        )),
+                    barrierDismissible: false);
               },
               icon: const Icon(Icons.delete)),
           IconButton(

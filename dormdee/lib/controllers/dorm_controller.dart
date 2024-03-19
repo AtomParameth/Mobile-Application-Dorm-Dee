@@ -55,11 +55,11 @@ class DormController extends GetxController {
       await _firestore.collection('users').doc(documentId).update({
         "favdorm": FieldValue.arrayRemove([dorms[index].id]),
       });
-
+      // print('Favorite dorm deleted successfully');
       // ลบข้อมูล dorm ออกจาก collection
       QuerySnapshot querySnapshot = await _firestore
-          .collection('favdorm')
-          .where('id', isEqualTo: dorms[index].id)
+          .collection('users')
+          .where('favdorm', isEqualTo: dorms[index].id)
           .get();
       querySnapshot.docs[0].reference.delete();
     } catch (e) {

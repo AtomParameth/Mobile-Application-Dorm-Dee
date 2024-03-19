@@ -145,8 +145,10 @@ class DormCardState extends State<DormCard> {
                       ),
                       IconButton(
                         icon: dormController.filteredDorms[index].isFavorite
-                            ? const Icon(Icons.favorite, color: Colors.red)
-                            : const Icon(Icons.favorite_border),
+                            ? const Icon(Icons.bookmark, color: Colors.amber)
+                            : const Icon(
+                                Icons.bookmark_border,
+                              ),
                         onPressed: () {
                           toggleFavorite(index);
                           if (dormController.filteredDorms[index].isFavorite) {

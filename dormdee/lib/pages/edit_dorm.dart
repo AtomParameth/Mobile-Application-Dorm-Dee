@@ -80,14 +80,14 @@ class _EditDormState extends State<EditDorm> {
                           child: Image.network(
                             DormController.instance.imageUrlRx.value,
                             fit: BoxFit.fill,
-                            width: 200,
-                            height: 200,
+                            width: 160,
+                            height: 160,
                           ),
                         );
                 }),
               ),
               const SizedBox(
-                height: 20,
+                height: 30,
               ),
               AppTextField(
                   controller: DormController.instance.name, title: "Dorm Name"),
@@ -117,13 +117,73 @@ class _EditDormState extends State<EditDorm> {
               const SizedBox(height: 20),
               const DropDownUpload(),
               const SizedBox(
-                height: 50,
+                height: 30,
               ),
               ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(50, 40),
+                      backgroundColor: const Color.fromARGB(221, 51, 169, 59)),
                   onPressed: () {
-                    DormController.instance.updateDormInfo(widget.dormId);
+                    Get.defaultDialog(
+                        backgroundColor: Colors.white,
+                        contentPadding: const EdgeInsets.all(20.0),
+                        title: "Ed Dorms",
+                        titleStyle: const TextStyle(color: Colors.black),
+                        titlePadding: const EdgeInsets.only(top: 20.0),
+                        middleText:
+                            "Are you sure you want to change dorms info?",
+                        content: const Column(children: [
+                          CircleAvatar(
+                            radius: 40,
+                            backgroundColor: Color.fromARGB(221, 54, 111, 255),
+                            child: Icon(
+                              Icons.edit,
+                              color: Colors.white,
+                              size: 30,
+                            ),
+                          ),
+                          SizedBox(height: 20.0),
+                          Text("Are you sure you want to change dorms info?")
+                        ]),
+                        onCancel: () {
+                          Get.back();
+                        },
+                        cancelTextColor: Colors.black,
+                        cancel: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              side: const BorderSide(
+                                  color: Color.fromARGB(221, 54, 111, 255)),
+                              minimumSize: const Size(50, 40),
+                              backgroundColor: Colors.white),
+                          onPressed: () {
+                            Get.back();
+                          },
+                          child: const Text("Cancel",
+                              style: TextStyle(
+                                color: Color.fromARGB(221, 54, 111, 255),
+                              )),
+                        ),
+                        confirm: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                minimumSize: const Size(50, 40),
+                                backgroundColor:
+                                    const Color.fromARGB(221, 54, 111, 255)),
+                            onPressed: () {
+                              DormController.instance
+                                  .updateDormInfo(widget.dormId);
+                              Get.back();
+                              // Navigator.pop(context);
+                            },
+                            child: const Text(
+                              "Confirm",
+                              style: TextStyle(color: Colors.white),
+                            )),
+                        barrierDismissible: false);
                   },
-                  child: const Text("Submit"))
+                  child: const Text(
+                    "Submit",
+                    style: TextStyle(color: Colors.white),
+                  ))
             ],
           ),
         ),

@@ -11,6 +11,13 @@ class DropDownMenu extends StatefulWidget {
 class _DropDownMenuState extends State<DropDownMenu> {
   String dropdownValue = 'All';
   final dormController = DormController.instance;
+
+  @override
+  void initState() {
+    dormController.filterDorms(dropdownValue);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return DropdownButton<String>(
