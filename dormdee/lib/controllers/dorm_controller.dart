@@ -320,7 +320,7 @@ class DormController extends GetxController {
     try {
       DocumentReference ref = await fs.collection("dorms").add(dorm.toJson());
       dorm.id = ref.id;
-      await fs.collection("dorms").add(dorm.toJson());
+      await ref.update({'id': ref.id});
       fetchDorms();
     } on FirebaseException catch (e) {
       showErrorSnackbar("Error", e.message.toString());
