@@ -48,37 +48,75 @@ class DormController extends GetxController {
     favoriteDorms.assignAll(newDorms);
   }
 
+  // Future<void> deleteFavoriteDorm(String documentId, String dormId) async {
+  //   try {
+  //     // ระบุ collection ที่เก็บข้อมูล favorite dorms
+  //     FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  //     // ลบ dorm ที่ระบุออกจากรายการโปรด
+  //     await _firestore.collection('users').doc(documentId).update({
+  //       "favdorm": FieldValue.arrayRemove([dormId]),
+  //     });
+  //     print('Favorite dorm deleted successfully ${dormId}');
+  //     // ลบข้อมูล dorm ออกจาก collection
+  //     // QuerySnapshot querySnapshot = await _firestore
+  //     //     .collection('users')
+  //     //     .where('favdorm', isEqualTo: dorms[index].id)
+  //     //     .get();
+  //     // querySnapshot.docs[0].reference.delete();
+  //   } catch (e) {
+  //     debugPrint('Error deleting favorite dorm: $e');
+  //   }
+  // }
   Future<void> deleteFavoriteDorm(String documentId, String dormId) async {
     try {
-      // ระบุ collection ที่เก็บข้อมูล favorite dorms
       FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-      // ลบ dorm ที่ระบุออกจากรายการโปรด
       await _firestore.collection('users').doc(documentId).update({
         "favdorm": FieldValue.arrayRemove([dormId]),
       });
+
+      favoriteDorms.removeWhere((dorm) => dorm.id == dormId);
+      favoriteDormIds.remove(dormId);
+
       print('Favorite dorm deleted successfully ${dormId}');
-      // ลบข้อมูล dorm ออกจาก collection
-      // QuerySnapshot querySnapshot = await _firestore
-      //     .collection('users')
-      //     .where('favdorm', isEqualTo: dorms[index].id)
-      //     .get();
-      // querySnapshot.docs[0].reference.delete();
     } catch (e) {
       debugPrint('Error deleting favorite dorm: $e');
     }
   }
 
+  // Future<void> addFavoriteDorm(documentId, int index) async {
+  //   try {
+  //     // ระบุ collection ที่เก็บข้อมูล favorite dorms
+  //     FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  //     await _firestore.collection('users').doc(documentId).update({
+  //       "favdorm": FieldValue.arrayUnion([dorms[index].id]),
+  //     });
+
+  //     print('Favorite dorm added successfully');
+  //   } catch (e) {
+  //     print('Error adding favorite dorm: $e');
+  //   }
+  // }
   Future<void> addFavoriteDorm(documentId, int index) async {
     try {
-      // ระบุ collection ที่เก็บข้อมูล favorite dorms
       FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-      await _firestore.collection('users').doc(documentId).update({
-        "favdorm": FieldValue.arrayUnion([dorms[index].id]),
-      });
+      DocumentSnapshot userDoc =
+          await _firestore.collection('users').doc(documentId).get();
+      List<String> favDorms = List<String>.from(userDoc.get('favdorm'));
 
-      print('Favorite dorm added successfully');
+      if (!favDorms.contains(dorms[index].id)) {
+        await _firestore.collection('users').doc(documentId).update({
+          "favdorm": FieldValue.arrayUnion([dorms[index].id]),
+        });
+
+        favoriteDorms.add(dorms[index]);
+        favoriteDormIds.add(dorms[index].id);
+
+        print('Favorite dorm added successfully');
+      }
     } catch (e) {
       print('Error adding favorite dorm: $e');
     }
@@ -92,11 +130,27 @@ class DormController extends GetxController {
     loadFavDorm();
   }
 
+  // void filterDorms(String category) {
+  //   try {
+  //     dropdownValue.value = category;
+  //     if (category == 'All') {
+  //       filteredDorms.assignAll(dorms);
+  //     } else {
+  //       filteredDorms.assignAll(
+  //         dorms.where((dorm) => dorm.category == category).toList(),
+  //       );
+  //     }
+  //   } catch (err) {
+  //     debugPrint(err.toString());
+  //   }
+  // }
   void filterDorms(String category) {
     try {
       dropdownValue.value = category;
       if (category == 'All') {
         filteredDorms.assignAll(dorms);
+      } else if (category == 'Favorites') {
+        filteredDorms.assignAll(favoriteDorms);
       } else {
         filteredDorms.assignAll(
           dorms.where((dorm) => dorm.category == category).toList(),
